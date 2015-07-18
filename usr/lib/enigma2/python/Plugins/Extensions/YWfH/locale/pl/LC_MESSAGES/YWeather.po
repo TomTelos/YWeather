@@ -1,0 +1,337 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Yweather plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-20 01:13+0100\n"
+"PO-Revision-Date: 2015-07-15 11:48+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Language: pl_PL\n"
+"X-Generator: Poedit 1.7.5\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+msgid ""
+"1. Visit http://weather.yahoo.com/\\n2. Enter your city or zip code and give "
+"go...\\n3. Copy ID (digit only) from\\nhttp://weather.yahoo.com/ukraine/.../"
+"kyiv-924938/\\n4. Save and restart the enigma"
+msgstr ""
+"1. Wejdź na stronę: http://weather.yahoo.com/\\n2. Wpisz miasto i wyszukaj"
+"\\n3. Skopiuj Kod (tylko cyfry) z adresu:\\nhttps://weather.yahoo.com/"
+"poland...krakow-502075/\\n4. Zapisz i restartuj system"
+
+msgid "configuration is saved"
+msgstr "Konfiguracja zapisana"
+
+msgid "2boom's Yahoo! Weather"
+msgstr "Yahoo! Pogoda"
+
+msgid "Restart"
+msgstr "Restartuj"
+
+msgid "YWeather.py not found"
+msgstr "Nie znaleziono YWeather.py"
+
+msgid "yahoo! weather plugin config"
+msgstr "Konfiguracja pogody"
+
+msgid "City code"
+msgstr "Kod lokalizacji"
+
+msgid "City name"
+msgstr "Miasto"
+
+msgid "Select plugin key"
+msgstr "Wybierz przycisk na pilocie"
+
+msgid "Feels: %s"
+msgstr "Odczuwalna: %s"
+
+msgid "%3.02f m/s"
+msgstr "%3.02f km/h"
+
+msgid "N, %3.02f m/s"
+msgstr "pn, %3.02f km/h"
+
+msgid "NNE, %3.02f m/s"
+msgstr "pn,pn-ws, %3.02f km/h"
+
+msgid "NE, %3.02f m/s"
+msgstr "pn-ws, %3.02f km/h"
+
+msgid "ENE, %3.02f m/s"
+msgstr "ws,pn-ws, %3.02f km/h"
+
+msgid "E, %3.02f m/s"
+msgstr "ws, %3.02f km/h"
+
+msgid "ESE, %3.02f m/s"
+msgstr "ws,pd-ws, %3.02f km/h"
+
+msgid "SE, %3.02f m/s"
+msgstr "pd-ws, %3.02f km/h"
+
+msgid "SSE, %3.02f m/s"
+msgstr "pd,pd-ws, %3.02f km/h"
+
+msgid "S, %3.02f m/s"
+msgstr "pd, %3.02f km/h"
+
+msgid "SSW, %3.02f m/s"
+msgstr "pd,pd-za, %3.02f km/h"
+
+msgid "SW, %3.02f m/s"
+msgstr "pd-za, %3.02f km/h"
+
+msgid "WSW, %3.02f m/s"
+msgstr "za,pd-za, %3.02f km/h"
+
+msgid "W, %3.02f m/s"
+msgstr "za, %3.02f km/h"
+
+msgid "WNW, %3.02f m/s"
+msgstr "za.pd-za, %3.02f km/h"
+
+msgid "NW, %3.02f m/s"
+msgstr "pn-za, %3.02f km/h"
+
+msgid "NNW, %3.02f m/s"
+msgstr "pn,pn-za, %3.02f km/h"
+
+msgid "%s km"
+msgstr "%s km"
+
+msgid "%s mb"
+msgstr "%s hPa"
+
+msgid "%d mmHg"
+msgstr "%d hPa"
+
+msgid "Tornado"
+msgstr "Tornado"
+
+msgid "Tropical storm"
+msgstr "Sztorm tropikalny"
+
+msgid "Hurricane"
+msgstr "Huragan"
+
+msgid "Severe thunderstorms"
+msgstr "Silne burze"
+
+msgid "Thunderstorms"
+msgstr "Burza"
+
+msgid "Mixed rain and snow"
+msgstr "Deszcz i śnieg"
+
+msgid "Mixed rain and sleet"
+msgstr "Deszcz i deszcz ze śniegiem"
+
+msgid "Mixed snow and sleet"
+msgstr "Śnieg i śnieg z deszczem"
+
+msgid "Freezing drizzle"
+msgstr "Marznąca mżawka"
+
+msgid "Drizzle"
+msgstr "Mżawaka"
+
+msgid "Freezing rain"
+msgstr "Marznący deszcz"
+
+msgid "Showers"
+msgstr "Przelotne opady deszczu"
+
+msgid "Rain"
+msgstr "Deszcz"
+
+msgid "Snow flurries"
+msgstr "Przelotne opady śniegu"
+
+msgid "Light snow showers"
+msgstr "Przelotne opady śniegu"
+
+msgid "Blowing snow"
+msgstr "Śnieżyca"
+
+msgid "Snow"
+msgstr "Śnieg"
+
+msgid "Hail"
+msgstr "Grad"
+
+msgid "Sleet"
+msgstr "Deszcz ze śniegiem"
+
+msgid "Dust"
+msgstr "Pylenie"
+
+msgid "Foggy"
+msgstr "Mglisto"
+
+msgid "Haze"
+msgstr "Mgła"
+
+msgid "Smoky"
+msgstr "Smog"
+
+msgid "Blustery"
+msgstr "Porywisty wiatr"
+
+msgid "Windy"
+msgstr "Wietrznie"
+
+msgid "Cold"
+msgstr "Zimno"
+
+msgid "Cloudy"
+msgstr "Pochmurno"
+
+msgid "Mostly cloudy (night)"
+msgstr "Możliwy deszcz (noc)"
+
+msgid "Mostly cloudy (day)"
+msgstr "Możliwy deszcz (dzień)"
+
+msgid "Partly cloudy (night)"
+msgstr "Częściowe zachmurzenie (noc)"
+
+msgid "Partly cloudy (day)"
+msgstr "Częściowe zachmurzenie (dzień)"
+
+msgid "Clear (night)"
+msgstr "Bezchmurnie (noc)"
+
+msgid "Sunny"
+msgstr "Słonecznie"
+
+msgid "Fair (night)"
+msgstr "Pogodnie (noc)"
+
+msgid "Fair (day)"
+msgstr "Pogodnie (dzień)"
+
+msgid "Mixed rain and hail"
+msgstr "Deszcz z gradem"
+
+msgid "Hot"
+msgstr "Upał"
+
+msgid "Isolated thunderstorms"
+msgstr "Możliwe burze"
+
+msgid "Scattered thunderstorms"
+msgstr "Burze nad nad ranem"
+
+msgid "Scattered showers"
+msgstr "Przelotne opady deszczu nad ranem"
+
+msgid "Heavy snow"
+msgstr "Duże opady śniegu"
+
+msgid "Scattered snow showers"
+msgstr "Przelotne opady śniegu"
+
+msgid "Partly cloudy"
+msgstr "Częściowe zachmurzenie"
+
+msgid "Thundershowers"
+msgstr "Burza z ulewami"
+
+msgid "Snow showers"
+msgstr "Opady śniegu"
+
+msgid "Isolated thundershowers"
+msgstr "Przelotne burze"
+
+msgid "Not available"
+msgstr "Niedostępne"
+
+msgid "Monday"
+msgstr "Poniedziałek"
+
+msgid "Tuesday"
+msgstr "Wtorek"
+
+msgid "Wednesday"
+msgstr "Środa"
+
+msgid "Thursday"
+msgstr "Czwartek"
+
+msgid "Friday"
+msgstr "Piątek"
+
+msgid "Saturday"
+msgstr "Sobota"
+
+msgid "Sunday"
+msgstr "Niedziela"
+
+msgid "%s%% humidity"
+msgstr "%s%% Wilgotność"
+
+msgid "Tomorrow"
+msgstr "Jutro"
+
+msgid "Weather icons style"
+msgstr "Ikony"
+
+msgid "User skin"
+msgstr "Skórka użytkownika"
+
+msgid "Built-in"
+msgstr "Wbudowany"
+
+msgid "User-def"
+msgstr "Ustawienia użytkownika"
+
+msgid "Style 1"
+msgstr "Styl 1"
+
+msgid "Style 2"
+msgstr "Styl 2"
+
+msgid "Style 3"
+msgstr "Styl 3"
+
+msgid "Style 4"
+msgstr "Styl 4"
+
+msgid "Style 5"
+msgstr "Styl 5"
+
+msgid "min: %s"
+msgstr "Min: %s"
+
+msgid "max: %s"
+msgstr "Maks: %s"
+
+msgid "Weather info timeout"
+msgstr "Czas wyświetlania pogody"
+
+msgid "press menukey for config"
+msgstr "Wyświetl lub skonfiguruj pogodę"
+
+msgid "2boom's Yahoo! Weather for Hotkey"
+msgstr "Yahoo! Pogoda"
+
+msgid "5 sec"
+msgstr "5 sek."
+
+msgid "8 sec"
+msgstr "8 sek."
+
+msgid "10 sec"
+msgstr "10 sek."
+
+msgid "12 sec"
+msgstr "12 sek."
+
+msgid "16 sec"
+msgstr "16 sek."

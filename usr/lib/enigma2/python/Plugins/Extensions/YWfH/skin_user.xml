@@ -6,8 +6,8 @@
   <widget source="feels_like" render="Label" position="112,45" size="170,20" zPosition="2" font="Regular; 17" halign="center" transparent="2" />
   <widget source="text_now" render="Label" position="20,167" size="250,22" zPosition="3" font="Regular; 19" halign="left" transparent="1" />
   <widget source="pressure" render="Label" position="142,128" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-  <widget source="humidity" render="Label" position="142,148" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-  <widget source="wind" render="Label" position="142,107" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+  <widget source="wind" render="Label" position="112,148" size="170,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
+  <widget source="humidity" render="Label" position="142,107" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
   <eLabel position="295,8" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
   <widget name="picon_day1" position="320,30" size="96,96" zPosition="2" alphatest="blend" />
   <widget source="tomorrow" render="Label" position="306,7" size="120,22" zPosition="2" font="Regular; 19" halign="left" transparent="1" />

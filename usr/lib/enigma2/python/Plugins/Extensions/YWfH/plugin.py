@@ -224,7 +224,7 @@ class WeatherInfo(Screen):
 			self.notdata = True
 		if not self.condition['code'] is '' and not self.wind['speed'] is '':
 			direct = int(self.condition['code'])
-			tmp_wind = (float(self.wind['speed']) * 1000)/3600
+			tmp_wind = (float(self.wind['speed']) * 3600)/3600
 			if direct >= 0 and direct <= 20:
 				self["wind"].text = _('N, %3.02f m/s') % tmp_wind
 			elif direct >= 21 and direct <= 35:
@@ -270,7 +270,7 @@ class WeatherInfo(Screen):
 			self["text_now"].text = _('N/A')
 			self.notdata = True
 		if not self.atmosphere['pressure'] is '':
-			tmp_pressure = round(float(self.atmosphere['pressure']) * 0.75)
+			tmp_pressure = round(float(self.atmosphere['pressure']) * 1.0)
 			self["pressure"].text = _("%d mmHg") % tmp_pressure
 		else:
 			self["pressure"].text = _('N/A')
@@ -327,31 +327,31 @@ SKIN_STYLE1 = """
     <widget source="city_locale" render="Label" position="150,2" size="250,30" zPosition="3" font="Regular; 27" halign="center" transparent="1" valign="center" />
     <eLabel position="20,196" size="512,2" backgroundColor="#00aaaaaa" zPosition="5" />
     <eLabel position="145,35" size="260,2" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_now" position="206,40" size="128,128" zPosition="2" alphatest="blend" />
-    <widget source="temp_now_min" render="Label" position="0,123" size="170,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="temp_now_max" render="Label" position="0,143" size="170,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="temp_now" render="Label" position="0,86" size="170,35" zPosition="2" font="Regular; 35" halign="right" transparent="1" foregroundColor="#00f0bf4f" />
-    <widget source="feels_like" render="Label" position="0,66" size="170,20" zPosition="2" font="Regular; 17" halign="right" transparent="2" />
-    <widget source="text_now" render="Label" position="145,167" size="250,22" zPosition="3" font="Regular; 19" halign="center" transparent="1" />
-    <widget source="pressure" render="Label" position="379,95" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="humidity" render="Label" position="379,122" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="wind" render="Label" position="379,66" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget name="picon_day1" position="20,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget name="picon_now" position="228,53" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="temp_now_min" render="Label" position="0,123" size="200,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="temp_now_max" render="Label" position="0,143" size="200,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="temp_now" render="Label" position="0,86" size="200,35" zPosition="2" font="Regular; 35" halign="right" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="feels_like" render="Label" position="0,66" size="200,20" zPosition="2" font="Regular; 17" halign="right" transparent="2" />
+    <widget source="text_now" render="Label" position="152,167" size="250,22" zPosition="3" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="pressure" render="Label" position="352,95" size="200,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="humidity" render="Label" position="352,122" size="200,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="wind" render="Label" position="352,66" size="200,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget name="picon_day1" position="19,230" size="96,96" zPosition="2" alphatest="blend" />
     <widget source="tomorrow" render="Label" position="4,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
     <widget source="temp_day1" render="Label" position="7,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
     <widget source="text_day1" render="Label" position="7,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
     <eLabel position="135,208" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_day2" position="160,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget name="picon_day2" position="159,230" size="96,96" zPosition="2" alphatest="blend" />
     <widget source="forecast_day2" render="Label" position="144,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
     <widget source="temp_day2" render="Label" position="147,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
     <widget source="text_day2" render="Label" position="147,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
     <eLabel position="275,208" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_day3" position="295,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget name="picon_day3" position="299,230" size="96,96" zPosition="2" alphatest="blend" />
     <widget source="forecast_day3" render="Label" position="284,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" valign="center" />
     <widget source="temp_day3" render="Label" position="286,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
     <widget source="text_day3" render="Label" position="286,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
     <eLabel position="415,208" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_day4" position="435,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget name="picon_day4" position="439,230" size="96,96" zPosition="2" alphatest="blend" />
     <widget source="forecast_day4" render="Label" position="424,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
     <widget source="temp_day4" render="Label" position="426,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
     <widget source="text_day4" render="Label" position="426,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
