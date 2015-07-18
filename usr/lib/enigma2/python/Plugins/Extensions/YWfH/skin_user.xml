@@ -1,0 +1,31 @@
+<screen name="WeatherInfo" position="center,center" size="855,192" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
+  <widget source="city_locale" render="Label" position="20,5" size="250,30" zPosition="3" font="Regular; 27" halign="left" transparent="1" valign="center" />
+  <eLabel position="20,38" size="260,2" backgroundColor="#00aaaaaa" zPosition="5" />
+  <widget name="picon_now" position="27,51" size="96,96" zPosition="2" alphatest="blend" />
+  <widget source="temp_now" render="Label" position="142,66" size="140,40" zPosition="2" font="Regular; 38" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+  <widget source="feels_like" render="Label" position="112,45" size="170,20" zPosition="2" font="Regular; 17" halign="center" transparent="2" />
+  <widget source="text_now" render="Label" position="20,167" size="250,22" zPosition="3" font="Regular; 19" halign="left" transparent="1" />
+  <widget source="pressure" render="Label" position="142,128" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+  <widget source="humidity" render="Label" position="142,148" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+  <widget source="wind" render="Label" position="142,107" size="140,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+  <eLabel position="295,8" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+  <widget name="picon_day1" position="320,30" size="96,96" zPosition="2" alphatest="blend" />
+  <widget source="tomorrow" render="Label" position="306,7" size="120,22" zPosition="2" font="Regular; 19" halign="left" transparent="1" />
+  <widget source="temp_day1" render="Label" position="306,125" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+  <widget source="text_day1" render="Label" position="307,150" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+  <eLabel position="435,8" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+  <widget name="picon_day2" position="460,30" size="96,96" zPosition="2" alphatest="blend" />
+  <widget source="forecast_day2" render="Label" position="446,7" size="120,22" zPosition="2" font="Regular; 19" halign="left" transparent="1" />
+  <widget source="temp_day2" render="Label" position="446,125" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+  <widget source="text_day2" render="Label" position="446,150" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+  <eLabel position="575,8" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+  <widget name="picon_day3" position="595,30" size="96,96" zPosition="2" alphatest="blend" />
+  <widget source="forecast_day3" render="Label" position="586,7" size="120,22" zPosition="2" font="Regular; 19" halign="left" transparent="1" />
+  <widget source="temp_day3" render="Label" position="586,125" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+  <widget source="text_day3" render="Label" position="586,150" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+  <eLabel position="715,8" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+  <widget name="picon_day4" position="735,30" size="96,96" zPosition="2" alphatest="blend" />
+  <widget source="forecast_day4" render="Label" position="726,7" size="120,22" zPosition="2" font="Regular; 19" halign="left" transparent="1" />
+  <widget source="temp_day4" render="Label" position="726,125" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+  <widget source="text_day4" render="Label" position="726,150" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+</screen>

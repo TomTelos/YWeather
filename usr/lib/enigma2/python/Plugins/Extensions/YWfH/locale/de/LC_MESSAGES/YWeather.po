@@ -1,0 +1,308 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Yweather plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-20 01:13+0100\n"
+"PO-Revision-Date: 2014-03-10 17:26+0100\n"
+"Last-Translator: \n"
+"Language-Team:  <4bob@ua.fm>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Language: de_DE\n"
+"X-Generator: Poedit 1.6.4\n"
+
+msgid "%3.02f m/s"
+msgstr "%3.02f m/s"
+
+msgid "%d mmHg"
+msgstr "%d mmH"
+
+msgid "%s km"
+msgstr "%s km"
+
+msgid "%s mb"
+msgstr "%s mb"
+
+msgid "%s%% humidity"
+msgstr "%s%% Luftfeuchtigkeit"
+
+msgid ""
+"1. Visit http://weather.yahoo.com/\\n2. Enter your city or zip code and give "
+"go...\\n3. Copy ID (digit only) from\\nhttp://weather.yahoo.com/ukraine/.../"
+"kyiv-924938/\\n4. Save and restart the enigma"
+msgstr ""
+"1. Besuche http://weather.yahoo.com/\\n2. Stadt oder Postleitzahl eingeben "
+"und Enter...\\n3. ID Kopieren (nur Ziffern)\\nhttp://weather.yahoo.com/"
+"germany/hamburg/hamburg-656958//\\n4. Speichern GUI Neustarten"
+
+msgid "Yahoo! Weather"
+msgstr "Yahoo! Weather"
+
+msgid "Blowing snow"
+msgstr "Schneetreiben"
+
+msgid "Blustery"
+msgstr "Stuermisch"
+
+msgid "City code"
+msgstr "Stadtcode"
+
+msgid "City name"
+msgstr "Stadtname"
+
+msgid "Clear (night)"
+msgstr "Klar (Nacht)"
+
+msgid "Cloudy"
+msgstr "Wolkig"
+
+msgid "Cold"
+msgstr "Kalt"
+
+msgid "Drizzle"
+msgstr "Nieselregen"
+
+msgid "Dust"
+msgstr "Staub"
+
+msgid "E, %3.02f m/s"
+msgstr "E, %3.02f m/s"
+
+msgid "ENE, %3.02f m/s"
+msgstr "ENE, %3.02f m/s"
+
+msgid "ESE, %3.02f m/s"
+msgstr "ESE, %3.02f m/s"
+
+msgid "Fair (day)"
+msgstr "Heiter (tag)"
+
+msgid "Fair (night)"
+msgstr "Heiter (Nacht)"
+
+msgid "Feels: %s"
+msgstr "Gefuehlt: %s"
+
+msgid "Foggy"
+msgstr "Neblig"
+
+msgid "Freezing drizzle"
+msgstr "Einfrieren Nieselregen"
+
+msgid "Freezing rain"
+msgstr "Eisregen"
+
+msgid "Friday"
+msgstr "Freitag"
+
+msgid "Hail"
+msgstr "Hagel"
+
+msgid "Haze"
+msgstr "Nebel"
+
+msgid "Heavy snow"
+msgstr "Starker Schneefall"
+
+msgid "Hot"
+msgstr "Heiss"
+
+msgid "Hurricane"
+msgstr "Hurrikan"
+
+msgid "Isolated thundershowers"
+msgstr "Vereinzelt Gewitter"
+
+msgid "Isolated thunderstorms"
+msgstr "Vereinzelt Gewitter"
+
+msgid "Light snow showers"
+msgstr "Leichte Schneeschauer"
+
+msgid "Mixed rain and hail"
+msgstr "Mixed regen und Hagel"
+
+msgid "Mixed rain and sleet"
+msgstr "Mixed regen und Schneeregen"
+
+msgid "Mixed rain and snow"
+msgstr "Mixed regen und Schnee"
+
+msgid "Mixed snow and sleet"
+msgstr "Mixed Schnee und Graupel"
+
+msgid "Monday"
+msgstr "Montag"
+
+msgid "Mostly cloudy (day)"
+msgstr "Ueberwiegend bewoelkt (tag)"
+
+msgid "Mostly cloudy (night)"
+msgstr "Leicht bewoelkt (Nacht)"
+
+msgid "N, %3.02f m/s"
+msgstr "N, %3.02f m/s"
+
+msgid "NE, %3.02f m/s"
+msgstr "NE, %3.02f m/s"
+
+msgid "NNE, %3.02f m/s"
+msgstr "NNE, %3.02f m/s"
+
+msgid "NNW, %3.02f m/s"
+msgstr "NNW, %3.02f m/s"
+
+msgid "NW, %3.02f m/s"
+msgstr "NW, %3.02f m/s"
+
+msgid "Not available"
+msgstr "Nicht verfuegbar"
+
+msgid "Partly cloudy"
+msgstr "Teilweise bewoelkt"
+
+msgid "Partly cloudy (day)"
+msgstr "Teilweise bewoelkt (Nacht)"
+
+msgid "Partly cloudy (night)"
+msgstr "Leicht bewoelkt (Nacht)"
+
+msgid "Restart"
+msgstr "Restart"
+
+msgid "S, %3.02f m/s"
+msgstr "S, %3.02f m/s"
+
+msgid "SE, %3.02f m/s"
+msgstr "SE, %3.02f m/s"
+
+msgid "SSE, %3.02f m/s"
+msgstr "SSE, %3.02f m/s"
+
+msgid "SSW, %3.02f m/s"
+msgstr "SSW, %3.02f m/s"
+
+msgid "SW, %3.02f m/s"
+msgstr "SW, %3.02f m/s"
+
+msgid "Saturday"
+msgstr "Samstag"
+
+msgid "Scattered showers"
+msgstr "Vereinzelte Regenschauer"
+
+msgid "Scattered snow showers"
+msgstr "Schneeschauer"
+
+msgid "Scattered thunderstorms"
+msgstr "Vereinzelte Gewitter"
+
+msgid "Select plugin key"
+msgstr "Plugin button auswaehlen"
+
+msgid "Severe thunderstorms"
+msgstr "Schwere Gewitter"
+
+msgid "Showers"
+msgstr "Regen"
+
+msgid "Sleet"
+msgstr "Schneeregen"
+
+msgid "Smoky"
+msgstr "Qualmig"
+
+msgid "Snow"
+msgstr "Schnee"
+
+msgid "Snow flurries"
+msgstr "Schneetreiben"
+
+msgid "Snow showers"
+msgstr "Schneeschauer"
+
+msgid "Sunday"
+msgstr "Sonntag"
+
+msgid "Sunny"
+msgstr "Sonnig"
+
+msgid "Thundershowers"
+msgstr "Gewitter"
+
+msgid "Gewitter"
+msgstr "Gewitter"
+
+msgid "Thursday"
+msgstr "Donnerstag"
+
+msgid "Tomorrow"
+msgstr "Morgen"
+
+msgid "Tornado"
+msgstr "Tornado"
+
+msgid "Tropical storm"
+msgstr "Tropischer Sturm"
+
+msgid "Tuesday"
+msgstr "Dienstag"
+
+msgid "W, %3.02f m/s"
+msgstr "W, %3.02f m/s"
+
+msgid "WNW, %3.02f m/s"
+msgstr "WNW, %3.02f m/s"
+
+msgid "WSW, %3.02f m/s"
+msgstr "WSW, %3.02f m/s"
+
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+msgid "Windy"
+msgstr "Windig"
+
+msgid "configuration is saved"
+msgstr "Konfiguration wird gespeichert"
+
+msgid "yahoo! weather plugin config"
+msgstr "yahoo! Wetter Plugin Konfig"
+
+msgid "Weather icons style"
+msgstr "Wetter-Icons Stil"
+
+msgid "User skin"
+msgstr "User Skin"
+
+msgid "Built-in"
+msgstr "Integriert"
+
+msgid "User-def"
+msgstr "User Stil"
+
+msgid "Style 1"
+msgstr "1 Stil"
+
+msgid "Style 2"
+msgstr "2 Stil"
+
+msgid "Style 3"
+msgstr "3 Stil"
+
+msgid "Style 4"
+msgstr "4 Stil"
+
+msgid "Style 5"
+msgstr "5 Stil"
+
+msgid "Rain"
+msgstr "Regen"
+
+msgid "press menukey for config"
+msgstr "Presse MenuKey fur Konfigurations"
+
+msgid "2boom's Yahoo! Weather for Hotkey"
+msgstr "Yahoo! Wetter auf Hotkey"
