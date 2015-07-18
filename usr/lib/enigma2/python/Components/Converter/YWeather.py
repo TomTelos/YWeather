@@ -25,7 +25,7 @@ from Poll import Poll
 import time
 import os
 
-time_update = 20
+time_update = 30
 time_update_ms = 5000
 #weather_city = '924938'
 # 924938 - Kiev
