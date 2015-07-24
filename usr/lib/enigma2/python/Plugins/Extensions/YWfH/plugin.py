@@ -22,7 +22,7 @@ from enigma import eTimer
 from twisted.web.client import downloadPage
 from Plugins.Plugin import PluginDescriptor
 from Components.ActionMap import ActionMap
-from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE
+from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE, SCOPE_SKIN
 from Components.config import getConfigListEntry, ConfigText, ConfigYesNo, ConfigSubsection, ConfigSelection, config, configfile
 from Components.ConfigList import ConfigListScreen
 from Components.Sources.StaticText import StaticText
@@ -47,9 +47,9 @@ def _(txt):
 
 def iconsdirs():
 	iconset = []
-	dirs = os.listdir("%sExtensions/YWfH/istyle/" % resolveFilename(SCOPE_PLUGINS))
+	dirs = os.listdir("%sweather_icons/" % resolveFilename(SCOPE_SKIN))
 	for istyledir in dirs:
-		if os.path.isdir("%sExtensions/YWfH/istyle/%s" % (resolveFilename(SCOPE_PLUGINS), istyledir)):
+		if os.path.isdir("%sweather_icons/%s" % (resolveFilename(SCOPE_SKIN), istyledir)):
 			iconset.append(istyledir)
 	return iconset
 
@@ -198,13 +198,13 @@ class WeatherInfo(Screen):
 			else:
 				self["temp_" + day].text = _('N/A')
 				self.notdata = True
-		defpicon = "%sExtensions/YWfH/istyle/%s/3200.png" % (resolveFilename(SCOPE_PLUGINS), config.plugins.yweather.istyle.value)
+		defpicon = "%sweather_icons/%s/3200.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value)
 		for daynumber in ('1', '2', '3', '4'):
 			day = 'day' + daynumber
 			self["picon_" + day].instance.setScale(1)
 			if self.forecastdata['code' + daynumber] is not '':
 				self["text_" + day].text = self.text[self.forecastdata['code' + daynumber]]
-				self["picon_" + day].instance.setPixmapFromFile("%sExtensions/YWfH/istyle/%s/%s.png" % (resolveFilename(SCOPE_PLUGINS), config.plugins.yweather.istyle.value, self.forecastdata['code' + daynumber]))
+				self["picon_" + day].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.forecastdata['code' + daynumber]))
 			else:
 				self["text_" + day].text = _('N/A')
 				self["picon_" + day].instance.setPixmapFromFile(defpicon)
@@ -282,7 +282,7 @@ class WeatherInfo(Screen):
 			self.notdata = True
 		self["picon_now"].instance.setScale(1)
 		if not self.condition['code'] is '':
-			self["picon_now"].instance.setPixmapFromFile("%sExtensions/YWfH/istyle/%s/%s.png" % (resolveFilename(SCOPE_PLUGINS), config.plugins.yweather.istyle.value, self.condition['code']))
+			self["picon_now"].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.condition['code']))
 		else:
 			self["picon_now"].instance.setPixmapFromFile(defpicon)
 		self["picon_now"].instance.show()
@@ -378,12 +378,10 @@ class yweather_setup(Screen, ConfigListScreen):
 	def __init__(self, session):
 		self.session = session
 		Screen.__init__(self, session)
-		config.plugins.yweather.istyle = ConfigSelection(choices = iconsdirs())
 		self.setTitle(_("2boom's Yahoo! Weather"))
 		self.list = []
 		self.list.append(getConfigListEntry(_("City code"), config.plugins.yweather.weather_city))
 		self.list.append(getConfigListEntry(_("City name"), config.plugins.yweather.weather_city_locale))
-		self.list.append(getConfigListEntry(_("Weather icons style"), config.plugins.yweather.istyle))
 		self.list.append(getConfigListEntry(_("User skin"), config.plugins.yweather.skin))
 		ConfigListScreen.__init__(self, self.list, session=session)
 		self["text"] = ScrollLabel("")
@@ -401,24 +399,12 @@ class yweather_setup(Screen, ConfigListScreen):
 			"yellow": self.restart,
 			"ok": self.save
 		}, -2)
-		self.onLayoutFinish.append(self.showicon)
-
-	def showicon(self):
-		count = 1
-		for number in ('8', '18', '22', '32'):
-			if fileExists("%sExtensions/YWfH/istyle/%s/%s.png" % (resolveFilename(SCOPE_PLUGINS), config.plugins.yweather.istyle.value, number)):
-				self["icon%s" % str(count)].instance.setScale(1)
-				self["icon%s" % str(count)].instance.setPixmapFromFile("%sExtensions/YWfH/istyle/%s/%s.png" % (resolveFilename(SCOPE_PLUGINS), config.plugins.yweather.istyle.value, number))
-				self["icon%s" % str(count)].instance.show()
-			count += 1
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
-		self.showicon()
 
 	def keyRight(self):
 		ConfigListScreen.keyRight(self)
-		self.showicon()
 
 	def restart(self):
 		self.session.open(TryQuitMainloop, 3)

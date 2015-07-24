@@ -30,7 +30,7 @@
 
 from Renderer import Renderer 
 from enigma import ePixmap
-from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_CURRENT_SKIN, SCOPE_PLUGINS, resolveFilename 
+from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_PLUGINS, resolveFilename 
 import os
 
 searchPaths = []
@@ -42,6 +42,7 @@ def initPiconPaths():
 			if '/dev/sd' in line or '/dev/disk/by-uuid/' in line or '/dev/mmc' in line:
 				piconPath = line.split()[1].replace('\\040', ' ') + '/%s/'
 				searchPaths.append(piconPath)
+	searchPaths.append(resolveFilename(SCOPE_SKIN, '%s/'))
 	searchPaths.append(resolveFilename(SCOPE_CURRENT_SKIN, '%s/'))
 	searchPaths.append(resolveFilename(SCOPE_PLUGINS, '%s/'))
 
