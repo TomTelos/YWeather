@@ -79,7 +79,7 @@ class WeatherInfo(Screen):
 			'16':(_('Snow')), '17':(_('Hail')), '18':(_('Sleet')), '19':(_('Dust')), '20':(_('Foggy')), '21':(_('Haze')), '22':(_('Smoky')), '23':(_('Blustery')),\
 			'24':(_('Windy')), '25':(_('Cold')), '26':(_('Cloudy')), '27':(_('Mostly cloudy (night)')), '28':(_('Mostly cloudy (day)')), '29':(_('Partly cloudy (night)')),\
 			'30':(_('Partly cloudy (day)')), '31':(_('Clear (night)')), '32':(_('Sunny')), '33':(_('Fair (night)')), '34':(_('Fair (day)')), '35':(_('Mixed rain and hail')),\
-			'36':(_('Hot')), '37':(_('Isolated thunderstorms')), '38':(_('Scattered thunderstorms')), '39':(_('Scattered thunderstorms')), '40':(_('Scattered showers')),\
+			'36':(_('Hot')), '37':(_('Isolated thunderstorms')), '38':(_('Scattered thunderstorms')), '39':(_('Isolated showers')), '40':(_('Scattered showers')),\
 			'41':(_('Heavy snow')), '42':(_('Scattered snow showers')), '43':(_('Heavy snow')), '44':(_('Partly cloudy')), '45':(_('Thundershowers')), '46':(_('Snow showers')),\
 			'47':(_('Isolated thundershowers')), '3200':(_('Not available'))}
 		self.weekday = {'Mon':(_('Monday')), 'Tue':(_('Tuesday')), 'Wed':(_('Wednesday')), 'Thu':(_('Thursday')), 'Fri':(_('Friday')), 'Sat':(_('Saturday')), 'Sun':(_('Sunday'))}

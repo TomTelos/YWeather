@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Yweather plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-20 01:13+0100\n"
-"PO-Revision-Date: 2015-07-28 08:08+0100\n"
+"PO-Revision-Date: 2015-08-08 15:30+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -148,7 +148,7 @@ msgid "Showers"
 msgstr "Opady deszczu"
 
 msgid "Rain"
-msgstr "Deszcz"
+msgstr "Silne opady deszczu"
 
 msgid "Snow flurries"
 msgstr "Przelotne opady śniegu"
@@ -223,10 +223,13 @@ msgid "Hot"
 msgstr "Upał"
 
 msgid "Isolated thunderstorms"
-msgstr "Możliwe burze"
+msgstr "Przelotne Burze"
 
 msgid "Scattered thunderstorms"
 msgstr "Przelotne Burze"
+
+msgid "Isolated showers"
+msgstr "Przelotne opady deszczu"
 
 msgid "Scattered showers"
 msgstr "Przelotne opady deszczu"
