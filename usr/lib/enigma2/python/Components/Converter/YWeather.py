@@ -3,6 +3,7 @@
 # xml from http://weather.yahooapis.com/forecastrss
 # Copyright (c) 2boom 2013-14 (02.03.2014)
 # v.1.5-r0
+# Modified by TomTelos
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or

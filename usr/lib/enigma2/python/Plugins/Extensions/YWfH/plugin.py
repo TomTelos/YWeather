@@ -1,5 +1,6 @@
  # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015
+# Modified by TomTelos
 # v.0.1-r0
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
