@@ -425,5 +425,6 @@ def main(session, **kwargs):
 	session.open(WeatherInfo)
 
 def Plugins(**kwargs):
-	list = [PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = [PluginDescriptor.WHERE_PLUGINMENU], icon="yw.png", fnc=main)]
+	list = [PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = [PluginDescriptor.WHERE_PLUGINMENU], icon="yw.png", fnc=main)
+			PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main)]
 	return list
