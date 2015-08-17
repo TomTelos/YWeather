@@ -55,8 +55,8 @@ def iconsdirs():
 	return iconset
 
 config.plugins.yweather = ConfigSubsection()
-config.plugins.yweather.weather_city = ConfigText(default="924938", visible_width = 70, fixed_size = False)
-config.plugins.yweather.weather_city_locale = ConfigText(default="Kyiv", visible_width = 170, fixed_size = False)
+config.plugins.yweather.weather_city = ConfigText(default="502075", visible_width = 70, fixed_size = False)
+config.plugins.yweather.weather_city_locale = ConfigText(default="Krakow", visible_width = 170, fixed_size = False)
 config.plugins.yweather.enabled = ConfigYesNo(default=True)
 config.plugins.yweather.skin = ConfigYesNo(default=False)
 config.plugins.yweather.istyle = ConfigSelection(choices = iconsdirs())
@@ -425,6 +425,6 @@ def main(session, **kwargs):
 	session.open(WeatherInfo)
 
 def Plugins(**kwargs):
-	list = [PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = [PluginDescriptor.WHERE_PLUGINMENU], icon="yw.png", fnc=main)
-			PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main)]
+	list = [PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = [PluginDescriptor.WHERE_PLUGINMENU], icon="yw.png", fnc=main),
+			PluginDescriptor(name=_("2boom's Yahoo! Weather for Hotkey"), description=_("press menukey for config"), where = [PluginDescriptor.WHERE_EXTENSIONSMENU], fnc=main)]
 	return list
