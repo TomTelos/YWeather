@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Yweather plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-20 01:13+0100\n"
-"PO-Revision-Date: 2015-09-04 11:25+0100\n"
+"PO-Revision-Date: 2016-01-19 11:47+0100\n"
 "Last-Translator: TomTelos\n"
 "Language-Team: TomTelos\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Language: pl_PL\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.8.6\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -338,3 +338,39 @@ msgstr "12 sek."
 
 msgid "16 sec"
 msgstr "16 sek."
+
+msgid "Jan."
+msgstr "Sty."
+
+msgid "Feb."
+msgstr "Lut."
+
+msgid "Mar."
+msgstr "Mar."
+
+msgid "Apr."
+msgstr "Kwi."
+
+msgid "May"
+msgstr "Maj"
+
+msgid "June"
+msgstr "Cze."
+
+msgid "July"
+msgstr "Lip."
+
+msgid "Aug."
+msgstr "Sie."
+
+msgid "Sept."
+msgstr "Wrz."
+
+msgid "Oct."
+msgstr "Paź."
+
+msgid "Nov."
+msgstr "Lis."
+
+msgid "Dec."
+msgstr "Gru."

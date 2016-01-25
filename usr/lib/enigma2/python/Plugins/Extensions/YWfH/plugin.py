@@ -1,7 +1,7 @@
  # Yahoo! weather for Hotkey
-# Copyright (c) 2boom 2015
-# Modified by TomTelos
-# v.0.1-r0
+# Copyright (c) 2boom 2015-16
+# Modified by TomTelos for Graterlia OS
+# v.0.2-r0
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -66,7 +66,11 @@ help_txt = _("1. Visit http://weather.yahoo.com/\\n2. Enter your city or zip cod
 class WeatherInfo(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.skin = SKIN_STYLE1
+		#if getDesktop(0).size().width() > 1280:
+			#self.skin = SKIN_STYLE1_FHD
+		#else:
+		self.skin = SKIN_STYLE1_HD
+		
 		if config.plugins.yweather.skin.value:
 			if fileExists('%sExtensions/YWfH/skin_user.xml' % resolveFilename(SCOPE_PLUGINS)):
 				with open('%sExtensions/YWfH/skin_user.xml' % resolveFilename(SCOPE_PLUGINS),'r') as user_skin:
@@ -84,6 +88,8 @@ class WeatherInfo(Screen):
 			'41':(_('Heavy snow')), '42':(_('Scattered snow showers')), '43':(_('Heavy snow')), '44':(_('Partly cloudy')), '45':(_('Thundershowers')), '46':(_('Snow showers')),\
 			'47':(_('Isolated thundershowers')), '3200':(_('Not available'))}
 		self.weekday = {'Mon':(_('Monday')), 'Tue':(_('Tuesday')), 'Wed':(_('Wednesday')), 'Thu':(_('Thursday')), 'Fri':(_('Friday')), 'Sat':(_('Saturday')), 'Sun':(_('Sunday'))}
+		self.month = {'Jan':(_('Jan.')), 'Feb':(_('Feb.')), 'Mar':(_('Mar.')), 'Apr':(_('Apr.')), 'May':(_('May')), 'June':(_('June')), 'July':(_('July')),\
+			'Aug':(_('Aug.')), 'Sept':(_('Sept.')), 'Oct':(_('Oct.')), 'Nov':(_('Nov.')), 'Dec':(_('Dec.'))}
 		self.location = {'city':'', 'country':''}
 		self.geo = {'lat':'', 'long':''}
 		self.units = {'temperature':'', 'distance':'', 'pressure':'', 'speed':''}
@@ -105,13 +111,23 @@ class WeatherInfo(Screen):
 		self["city_locale"] = StaticText()
 		self["picon_now"] = Pixmap()
 		self["tomorrow"] = StaticText(_('Tomorrow'))
-		for daynumber in ('0', '1', '2', '3', '4'):
+		self["pressure_hpa"] = StaticText()
+		self["wind_kmh"] = StaticText()
+		self["sunrise"] = StaticText()
+		self["sunset"] = StaticText()
+		self["date"] = StaticText()
+		self["visibility"] = StaticText()
+		self["tomorrow"] = StaticText(_('Tomorrow'))
+		self["lat"] = StaticText()
+		self["long"] = StaticText()
+		for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 			day = 'day' + daynumber
 			self["temp_" + day] = StaticText()
 			self["forecast_" + day] = StaticText()
-			if not daynumber is '0':
-				self["picon_" + day] = Pixmap()
-				self["text_" + day] = StaticText()
+			self["forecastdate_" + day] = StaticText()
+			#if not daynumber is '0':
+			self["picon_" + day] = Pixmap()
+			self["text_" + day] = StaticText()
 		self.notdata = False
 		self["actions"] = ActionMap(["WizardActions",  "MenuActions"], 
 		{
@@ -170,23 +186,31 @@ class WeatherInfo(Screen):
 			elif '<yweather:forecast' in line:
 				self.forecast.append(line)
 		for data in ('day', 'date', 'low', 'high', 'text', 'code'):
-			for daynumber in ('0', '1', '2', '3', '4'):
+			for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 				self.forecastdata[data + daynumber] = ''
-		if len(self.forecast) is 5:
+		if len(self.forecast) is 10:
 			for data in ('day', 'date', 'low', 'high', 'text', 'code'):
-				for daynumber in ('0', '1', '2', '3', '4'):
+				for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 					self.forecastdata[data + daynumber] = self.get_data(self.forecast[int(daynumber)], data)
 		else:
 			self.notdata = True
 		if len(config.plugins.yweather.weather_city_locale.value) > 0:
 			self["city_locale"].text = config.plugins.yweather.weather_city_locale.value
-		for daynumber in ('0', '1', '2', '3', '4'):
+		for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 			day = 'day' + daynumber
 			if self.forecastdata[day] is not '':
 				self["forecast_" + day].text = '%s' % self.weekday[self.forecastdata[day]]
 			else:
 				self["forecast_" + day].text = _('N/A')
 				self.notdata = True
+				
+			if self.forecastdata['date' + daynumber] is not '':
+				tmp_date = self.forecastdata['date' + daynumber]
+				self["forecastdate_" + day].text = '%s %s' % (tmp_date.split()[0], self.month[tmp_date.split()[1]]) 
+			else:
+				self["forecastdate_" + day].text = _('N/A')
+				self.notdata = True
+			
 			if self.forecastdata['low0'] is not '' and self.forecastdata['high0'] is not '':
 				self["temp_now_min"].text = _('min: %s') % self.tempsing(self.forecastdata['low0'])
 				self["temp_now_max"].text = _('max: %s') % self.tempsing(self.forecastdata['high0'])
@@ -200,7 +224,8 @@ class WeatherInfo(Screen):
 				self["temp_" + day].text = _('N/A')
 				self.notdata = True
 		defpicon = "%sweather_icons/%s/3200.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value)
-		for daynumber in ('1', '2', '3', '4'):
+		#for daynumber in ('1', '2', '3', '4'):
+		for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 			day = 'day' + daynumber
 			self["picon_" + day].instance.setScale(1)
 			if self.forecastdata['code' + daynumber] is not '':
@@ -263,6 +288,45 @@ class WeatherInfo(Screen):
 			else:
 				self["wind"].text = _('N/A')
 				self.notdata = True
+		if not self.condition['code'] is '' and not self.wind['speed'] is '':
+			direct = int(self.condition['code'])
+			if direct >= 0 and direct <= 20:
+				self["wind_kmh"].text = _('N, %s km/h') % self.wind['speed']
+			elif direct >= 21 and direct <= 35:
+				self["wind_kmh"].text = _('NNE, %s km/h') % self.wind['speed']
+			elif direct >= 36 and direct <= 55:
+				self["wind_kmh"].text = _('NE, %s km/h') % self.wind['speed']
+			elif direct >= 56 and direct <= 70:
+				self["wind_kmh"].text = _('ENE, %s km/h') % self.wind['speed']
+			elif direct >= 71 and direct <= 110:
+				self["wind_kmh"].text = _('E, %s km/h') % self.wind['speed']
+			elif direct >= 111 and direct <= 125:
+				self["wind_kmh"].text = _('ESE, %s km/h') % self.wind['speed']
+			elif direct >= 126 and direct <= 145:
+				self["wind_kmh"].text = _('SE, %s km/h') % self.wind['speed']
+			elif direct >= 146 and direct <= 160:
+				self["wind_kmh"].text = _('SSE, %s km/h') % self.wind['speed']
+			elif direct >= 161 and direct <= 200:
+				self["wind_kmh"].text = _('S, %s km/h') % self.wind['speed']
+			elif direct >= 201 and direct <= 215:
+				self["wind_kmh"].text = _('SSW, %s km/h') % self.wind['speed']
+			elif direct >= 216 and direct <= 235:
+				self["wind_kmh"].text = _('SW, %s km/h') % self.wind['speed']
+			elif direct >= 236 and direct <= 250:
+				self["wind_kmh"].text = _('WSW, %s km/h') % self.wind['speed']
+			elif direct >= 251 and direct <= 290:
+				self["wind_kmh"].text = _('W, %s km/h') % self.wind['speed']
+			elif direct >= 291 and direct <= 305:
+				self["wind_kmh"].text = _('WNW, %s km/h') % self.wind['speed']
+			elif direct >= 306 and direct <= 325:
+				self["wind_kmh"].text = _('NW, %s km/h') % self.wind['speed']
+			elif direct >= 326 and direct <= 340:
+				self["wind_kmh"].text = _('NNW, %s km/h') % self.wind['speed']
+			elif direct >= 341 and direct <= 360:
+				self["wind_kmh"].text = _('N, %s km/h') % self.wind['speed']
+			else:
+				self["wind_kmh"].text = _('N/A')
+				self.notdata = True
 		else:
 			self.notdata = True
 		if not self.condition['code'] is '':
@@ -276,10 +340,44 @@ class WeatherInfo(Screen):
 		else:
 			self["pressure"].text = _('N/A')
 			self.notdata = True
+		if not self.atmosphere['pressure'] is '':
+			self["pressure_hpa"].text = _("%s hPa(mbar)") % self.atmosphere['pressure']
+		else:
+			self["pressure_hpa"].text = _('N/A')
+			self.notdata = True
 		if not self.atmosphere['humidity'] is '':
 			self["humidity"].text = _('%s%% humidity') % self.atmosphere['humidity']
 		else:
 			self["humidity"].text = _('N/A')
+			self.notdata = True
+		if not self.atmosphere['visibility'] is '':
+			self["visibility"].text = _('%s km') % self.atmosphere['visibility']
+		else:
+			self["visibility"].text = _('N/A')
+			self.notdata = True
+			
+		if not self.geo['lat'] is '':
+			self["lat"].text = self.geo['lat']
+		else:
+			self["lat"].text = _('N/A')
+			self.notdata = True
+			
+		if not self.geo['long'] is '':
+			self["long"].text = self.geo['long']
+		else:
+			self["long"].text = _('N/A')
+			self.notdata = True
+			
+		if not self.astronomy['sunrise'] is '':
+			self["sunrise"].text = _('%s') % self.time_convert(self.astronomy['sunrise'])
+		else:
+			self["sunrise"].text = _('N/A')
+			self.notdata = True
+			
+		if not self.astronomy['sunset'] is '':
+			self["sunset"].text = _('%s') % self.time_convert(self.astronomy['sunset'])
+		else:
+			self["sunset"].text = _('N/A')
 			self.notdata = True
 		self["picon_now"].instance.setScale(1)
 		if not self.condition['code'] is '':
@@ -290,11 +388,23 @@ class WeatherInfo(Screen):
 
 	def get_xmlfile(self):
 		if self.isServerOnline():
-			xmlfile = "http://weather.yahooapis.com/forecastrss?w=%s&u=c" % config.plugins.yweather.weather_city.value
+			xmlfile = "http://weather.yahooapis.com/forecastrss?w=%s&d=10&u=c" % config.plugins.yweather.weather_city.value
 			downloadPage(xmlfile, "/tmp/yweather.xml").addCallback(self.downloadFinished).addErrback(self.downloadFailed)
 		else:
 			self["text_now"].text = _('weatherserver not respond')
 			self.notdata = True
+			
+	def time_convert(self, time):
+		print "[YWeather] Time convert"
+		tmp_time = ''
+		if time.endswith('pm'):
+			tmp_time = '%s:%s' % (int(time.split()[0].split(':')[0]) + 12, time.split()[0].split(':')[-1])
+		else:
+			tmp_time = time.replace('am', '').strip()
+		if len(tmp_time) is 4:
+			return '0%s' % tmp_time
+		else:
+			return tmp_time
 
 	def downloadFinished(self, result):
 		print "[YWeather] Download finished"
@@ -323,44 +433,71 @@ class WeatherInfo(Screen):
 		else:
 			return what + '%s' % unichr(176).encode("latin-1")
 ##############################################################################
-SKIN_STYLE1 = """
-<screen name="WeatherInfo" position="center,center" size="552,392" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
+SKIN_STYLE1_HD = """
+<screen name="WeatherInfo" position="365,75" size="550,590" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
     <widget source="city_locale" render="Label" position="150,2" size="250,30" zPosition="3" font="Regular; 27" halign="center" transparent="1" valign="center" />
-    <eLabel position="20,196" size="512,2" backgroundColor="#00aaaaaa" zPosition="5" />
+    <eLabel position="20,181" size="512,2" backgroundColor="#00aaaaaa" zPosition="5" />
+    <eLabel position="20,385" size="512,2" backgroundColor="#00aaaaaa" zPosition="5" />
     <eLabel position="145,35" size="260,2" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_now" position="228,53" size="96,96" zPosition="2" alphatest="blend" />
-    <widget source="temp_now_min" render="Label" position="0,123" size="200,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="temp_now_max" render="Label" position="0,143" size="200,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="temp_now" render="Label" position="0,86" size="200,35" zPosition="2" font="Regular; 35" halign="right" transparent="1" foregroundColor="#00f0bf4f" />
-    <widget source="feels_like" render="Label" position="0,66" size="200,20" zPosition="2" font="Regular; 17" halign="right" transparent="2" />
-    <widget source="text_now" render="Label" position="152,167" size="250,22" zPosition="3" font="Regular; 19" halign="center" transparent="1" />
-    <widget source="pressure" render="Label" position="352,95" size="200,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="humidity" render="Label" position="352,122" size="200,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget source="wind" render="Label" position="352,66" size="200,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
-    <widget name="picon_day1" position="19,230" size="96,96" zPosition="2" alphatest="blend" />
-    <widget source="tomorrow" render="Label" position="4,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget name="picon_now" position="222,48" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="temp_now_min" render="Label" position="0,102" size="170,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="temp_now_max" render="Label" position="0,123" size="170,20" zPosition="3" font="Regular; 17" halign="right" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="temp_now" render="Label" position="0,66" size="170,35" zPosition="2" font="Regular; 35" halign="right" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="feels_like" render="Label" position="0,46" size="170,20" zPosition="2" font="Regular; 17" halign="right" transparent="2" />
+    <widget source="text_now" render="Label" position="146,152" size="250,22" zPosition="3" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="pressure" render="Label" position="379,80" size="160,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="humidity" render="Label" position="379,102" size="160,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="wind" render="Label" position="379,46" size="160,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget name="picon_day1" position="20,231" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="forecast_day1" render="Label" position="4,187" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
     <widget source="temp_day1" render="Label" position="7,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
-    <widget source="text_day1" render="Label" position="7,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
-    <eLabel position="135,208" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_day2" position="159,230" size="96,96" zPosition="2" alphatest="blend" />
-    <widget source="forecast_day2" render="Label" position="144,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="text_day1" render="Label" position="7,345" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <eLabel position="135,198" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+    <widget name="picon_day2" position="160,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="forecast_day2" render="Label" position="143,187" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
     <widget source="temp_day2" render="Label" position="147,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
-    <widget source="text_day2" render="Label" position="147,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
-    <eLabel position="275,208" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_day3" position="299,230" size="96,96" zPosition="2" alphatest="blend" />
-    <widget source="forecast_day3" render="Label" position="284,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" valign="center" />
+    <widget source="text_day2" render="Label" position="147,345" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <eLabel position="275,198" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+    <widget name="picon_day3" position="295,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="forecast_day3" render="Label" position="284,187" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" valign="center" />
     <widget source="temp_day3" render="Label" position="286,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
-    <widget source="text_day3" render="Label" position="286,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
-    <eLabel position="415,208" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
-    <widget name="picon_day4" position="439,230" size="96,96" zPosition="2" alphatest="blend" />
-    <widget source="forecast_day4" render="Label" position="424,207" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="text_day3" render="Label" position="286,345" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <eLabel position="415,198" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+    <widget name="picon_day4" position="435,230" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="forecast_day4" render="Label" position="424,187" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
     <widget source="temp_day4" render="Label" position="426,325" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
-    <widget source="text_day4" render="Label" position="426,350" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="text_day4" render="Label" position="426,345" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="forecastdate_day1" render="Label" position="7,210" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="forecastdate_day2" render="Label" position="147,210" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="forecastdate_day3" render="Label" position="286,210" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="forecastdate_day4" render="Label" position="426,210" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <eLabel position="415,407" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+    <widget source="forecast_day8" render="Label" position="424,391" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="forecastdate_day8" render="Label" position="426,414" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget name="picon_day8" position="435,434" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="temp_day8" render="Label" position="426,529" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="text_day8" render="Label" position="426,549" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <eLabel position="275,407" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+    <widget source="forecast_day7" render="Label" position="284,391" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="forecastdate_day7" render="Label" position="286,414" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget name="picon_day7" position="295,434" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="temp_day7" render="Label" position="286,529" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="text_day7" render="Label" position="286,549" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <eLabel position="135,407" size="2,170" backgroundColor="#00aaaaaa" zPosition="5" />
+    <widget source="forecast_day6" render="Label" position="144,391" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="forecastdate_day6" render="Label" position="146,414" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget name="picon_day6" position="155,434" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="temp_day6" render="Label" position="146,529" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="text_day6" render="Label" position="146,549" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="forecast_day5" render="Label" position="4,391" size="125,22" zPosition="2" font="Regular; 19" halign="center" transparent="1" />
+    <widget source="forecastdate_day5" render="Label" position="6,414" size="120,19" zPosition="2" font="Regular; 17" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget name="picon_day5" position="15,434" size="96,96" zPosition="2" alphatest="blend" />
+    <widget source="temp_day5" render="Label" position="6,529" size="120,21" zPosition="2" font="Regular; 19" halign="center" transparent="1" foregroundColor="#00f0bf4f" />
+    <widget source="text_day5" render="Label" position="6,549" size="120,36" zPosition="2" font="Regular; 16" halign="center" transparent="1" foregroundColor="#00aaaaaa" />
+    <widget source="visibility" render="Label" position="379,123" size="160,20" zPosition="3" font="Regular; 17" halign="left" transparent="1" foregroundColor="#00aaaaaa" />
 </screen>
 """ 
-
-class yweather_setup(Screen, ConfigListScreen):
-	skin = """
+SKIN_CONFIG_HD = """
 <screen name="yweather_setup" position="center,140" size="750,505" title="2boom's Yahoo Weather">
   <widget position="15,10" size="720,150" name="config" scrollbarMode="showOnDemand" />
   <eLabel position="30,165" size="690,2" backgroundColor="#00aaaaaa" zPosition="5" />
@@ -376,9 +513,16 @@ class yweather_setup(Screen, ConfigListScreen):
   <widget name="icon3" position="390,336" size="96,96" zPosition="2" alphatest="blend" />
   <widget name="icon4" position="535,336" size="96,96" zPosition="2" alphatest="blend" />
 </screen>"""
+
+class yweather_setup(Screen, ConfigListScreen):
 	def __init__(self, session):
 		self.session = session
 		Screen.__init__(self, session)
+		#if getDesktop(0).size().width() > 1280:
+			#self.skin = SKIN_CONFIG_FHD
+		#else:
+		self.skin = SKIN_CONFIG_HD
+		config.plugins.yweather.istyle = ConfigSelection(choices = iconsdirs())
 		self.setTitle(_("2boom's Yahoo! Weather"))
 		self.list = []
 		self.list.append(getConfigListEntry(_("City code"), config.plugins.yweather.weather_city))
@@ -400,6 +544,7 @@ class yweather_setup(Screen, ConfigListScreen):
 			"yellow": self.restart,
 			"ok": self.save
 		}, -2)
+
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
