@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # YWeather Converter
 # xml from http://weather.yahooapis.com/forecastrss
-# Copyright (c) 2boom 2013-14 (02.03.2014)
-# v.1.5-r0
+# Copyright (c) 2boom 2013-15 (27.11.2015)
+# v.1.5-r2
 # Modified by TomTelos
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,11 +25,12 @@ from Poll import Poll
 import time
 import os
 
-time_update = 30
-time_update_ms = 5000
-#weather_city = '924938'
 # 924938 - Kiev
 # 2122265 - Moscow
+# weather_city = '924938'
+time_update = 20
+time_update_ms = 3000
+#time_update_ms = 30000
 
 class YWeather(Poll, Converter, object):
 	city = 0
@@ -202,11 +202,12 @@ class YWeather(Poll, Converter, object):
 		self.iConsole = iConsole()
 		self.poll_interval = time_update_ms
 		self.poll_enabled = True
+		
 	def write_none(self):
 		self.iConsole.ePopen("echo -e 'None' >> /tmp/yweather.xml")
 		
 	def get_xmlfile(self):
-		self.iConsole.ePopen("wget -P /tmp -T2 'http://xml.weather.yahoo.com/forecastrss?w=%s&u=c' -O /tmp/yweather.xml" % config.plugins.yweather.weather_city.value, self.control_xml)
+		self.iConsole.ePopen("wget -P /tmp -T2 'http://weather.yahooapis.com/forecastrss?w=%s&d=10&u=c' -O /tmp/yweather.xml" % config.plugins.yweather.weather_city.value, self.control_xml)
 		
 	def control_xml(self, result, retval, extra_args):
 		if retval is not 0:
@@ -227,7 +228,7 @@ class YWeather(Poll, Converter, object):
 			if not fileExists("/tmp/yweather.xml"):
 				self.write_none()
 				return 'N/A'
-                if not fileExists("/tmp/yweather.xml"):
+		if not fileExists("/tmp/yweather.xml"):
 			self.write_none()
 			return 'N/A'
 		for line in open("/tmp/yweather.xml"):
@@ -275,38 +276,38 @@ class YWeather(Poll, Converter, object):
 				if direct >= 0 and direct <= 20:
 					info = _('N')
 				elif direct >= 21 and direct <= 35:
-					info = _('N-NE')
+					info = _('NNE')
 				elif direct >= 36 and direct <= 55:
 					info = _('NE')
 				elif direct >= 56 and direct <= 70:
-					info = _('E-NE')
+					info = _('ENE')
 				elif direct >= 71 and direct <= 110:
 					info = _('E')
 				elif direct >= 111 and direct <= 125:
-					info = _('E-SE')
+					info = _('ESE')
 				elif direct >= 126 and direct <= 145:
 					info = _('SE')
 				elif direct >= 146 and direct <= 160:
-					info = _('S-SE')
+					info = _('SSE')
 				elif direct >= 161 and direct <= 200:
 					info = _('S')
 				elif direct >= 201 and direct <= 215:
-					info = _('S-SW')
+					info = _('SSW')
 				elif direct >= 216 and direct <= 235:
 					info = _('SW')
 				elif direct >= 236 and direct <= 250:
-					info = _('W-SW')
+					info = _('WSW')
 				elif direct >= 251 and direct <= 290:
 					info = _('W')
 				elif direct >= 291 and direct <= 305:
-					info = _('W-NW')
+					info = _('WNW')
 				elif direct >= 306 and direct <= 325:
 					info = _('NW')
 				elif direct >= 326 and direct <= 340:
-					info = _('N-NW')
+					info = _('NNW')
 				elif direct >= 341 and direct <= 360:
 					info = _('N')
-                                else:
+				else:
 					info = _('N/A')
 		elif self.type == self.speed:
 			info = xweather['yspeed'] + _(' km/h')
@@ -321,14 +322,16 @@ class YWeather(Poll, Converter, object):
 				info = "N/A"
 		elif self.type == self.sunset:
 			if not xweather['ysunset'] is 'N/A':
-#				info = '%s:%s' % (int(xweather['ysunset'].split(':')[0]) + 12, xweather['ysunset'].split(':')[1])
-				info = '%.02d:%s' % (int(xweather['ysunset'].split(':')[0]) + 12, xweather['ysunset'].split(':')[1])
+				info = '%s:%s' % (int(xweather['ysunset'].split(':')[0]) + 12, xweather['ysunset'].split(':')[1])
 			else:
 				info = "N/A"
 		elif self.type == self.speed_ms:
 			if not xweather['yspeed'] is 'N/A':
-				speed = (float(xweather['yspeed']) * 1000)/3600
-				info = _('%3.02f m/s') % speed
+				try:
+					speed = (float(xweather['yspeed']) * 1000)/3600
+					info = _('%3.02f m/s') % speed
+				except:
+					info = "N/A"
 			else:
 				info = "N/A"
 		elif self.type == self.humidity:
@@ -622,7 +625,7 @@ class YWeather(Poll, Converter, object):
 				info = "N/A"
 		elif self.type == self.cityid:
 			info = config.plugins.yweather.weather_city.value
-                return info
+		return info
 ######################################################
 	text = property(getText)
 

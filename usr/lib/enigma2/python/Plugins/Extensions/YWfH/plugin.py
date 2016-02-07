@@ -1,7 +1,7 @@
  # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.2-r0
+# v.0.3-r2
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -14,6 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# http://where.yahooapis.com/v1/places.q('Kyiv')?appid=dj0yJmk9QmFoVGxPMzBiV282JmQ9WVdrOU5XbE5hVWxrTnpRbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD0xMw--
 
 import os
 import time
@@ -33,6 +35,7 @@ from Components.Pixmap import Pixmap
 from Screens.MessageBox import MessageBox
 from Screens.Standby import TryQuitMainloop
 from Screens.Screen import Screen
+import urllib
 
 lang = language.getLanguage()
 os.environ["LANGUAGE"] = lang[:2]
@@ -57,18 +60,24 @@ def iconsdirs():
 config.plugins.yweather = ConfigSubsection()
 config.plugins.yweather.weather_city = ConfigText(default="502075", visible_width = 70, fixed_size = False)
 config.plugins.yweather.weather_city_locale = ConfigText(default="Krakow", visible_width = 170, fixed_size = False)
+config.plugins.yweather.weather_city_locale_search = ConfigText(default="", visible_width = 170, fixed_size = False)
 config.plugins.yweather.enabled = ConfigYesNo(default=True)
 config.plugins.yweather.skin = ConfigYesNo(default=False)
+config.plugins.yweather.timeout = ConfigSelection(default = '0', choices = [
+		('0', _("Off")),
+		('5', _("5 sec")),
+		('8', _("8 sec")),
+		('10', _("10 sec")),
+		('12', _("12 sec")),
+		('16', _("16 sec")),
+		])
 config.plugins.yweather.istyle = ConfigSelection(choices = iconsdirs())
 
-help_txt = _("1. Visit http://weather.yahoo.com/\\n2. Enter your city or zip code and give go...\\n3. Copy ID (digit only) from\\nhttp://weather.yahoo.com/ukraine/.../kyiv-924938/\\n4. Save and restart the enigma")
+help_txt = _("1. Visit http://woeid.rosselliot.co.nz\\n2. Enter your city or zip code and give go...\\n3. Copy ID (digit only)\\n4. Save and restart the enigma")
 
 class WeatherInfo(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		#if getDesktop(0).size().width() > 1280:
-			#self.skin = SKIN_STYLE1_FHD
-		#else:
 		self.skin = SKIN_STYLE1_HD
 		
 		if config.plugins.yweather.skin.value:
@@ -77,6 +86,7 @@ class WeatherInfo(Screen):
 					self.skin = user_skin.read()
 				user_skin.close()
 		self.setTitle(_("2boom's Yahoo! Weather"))
+		self.Timer = eTimer()
 		self.time_update = 20
 		self.text = {'0':(_('Tornado')), '1':(_('Tropical storm')), '2':(_('Hurricane')), '3':(_('Severe thunderstorms')), '4':(_('Thunderstorms')),\
 			'5':(_('Mixed rain and snow')), '6':(_('Mixed rain and sleet')), '7':(_('Mixed snow and sleet')), '8':(_('Freezing drizzle')), '9':(_('Drizzle')),\
@@ -125,7 +135,6 @@ class WeatherInfo(Screen):
 			self["temp_" + day] = StaticText()
 			self["forecast_" + day] = StaticText()
 			self["forecastdate_" + day] = StaticText()
-			#if not daynumber is '0':
 			self["picon_" + day] = Pixmap()
 			self["text_" + day] = StaticText()
 		self.notdata = False
@@ -224,13 +233,12 @@ class WeatherInfo(Screen):
 				self["temp_" + day].text = _('N/A')
 				self.notdata = True
 		defpicon = "%sweather_icons/%s/3200.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value)
-		#for daynumber in ('1', '2', '3', '4'):
 		for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 			day = 'day' + daynumber
 			self["picon_" + day].instance.setScale(1)
 			if self.forecastdata['code' + daynumber] is not '':
 				self["text_" + day].text = self.text[self.forecastdata['code' + daynumber]]
-				self["picon_" + day].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.forecastdata['code' + daynumber]))
+				self["picon_" + day].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.forecastdata['code' + daynumber]))			
 			else:
 				self["text_" + day].text = _('N/A')
 				self["picon_" + day].instance.setPixmapFromFile(defpicon)
@@ -243,6 +251,13 @@ class WeatherInfo(Screen):
 			self["temp_now"].text = _('N/A')
 			self["temp_now_nounits"].text = _('N/A')
 			self.notdata = True
+			
+		if self.condition['date'] is not '':
+			self["date"].text = self.tempsing(self.condition['date']).replace('+', '')
+		else:
+			self["date"].text = _('N/A')
+			self.notdata = True
+			
 		if self.wind['chill'] is not '':
 			self["feels_like"].text = _('Feels: %s') % self.tempsing(self.wind['chill'])
 		else:
@@ -357,13 +372,19 @@ class WeatherInfo(Screen):
 			self.notdata = True
 			
 		if not self.geo['lat'] is '':
-			self["lat"].text = self.geo['lat']
+			if self.geo['lat'].startswith('-'):
+				self["lat"].text = '%s S' % self.geo['lat']
+			else:
+				self["lat"].text = '%s N' % self.geo['lat']
 		else:
 			self["lat"].text = _('N/A')
 			self.notdata = True
 			
 		if not self.geo['long'] is '':
-			self["long"].text = self.geo['long']
+			if self.geo['long'].startswith('-'):
+				self["long"].text = '%s W' % self.geo['long']
+			else:
+				self["long"].text = '%s E' % self.geo['long']
 		else:
 			self["long"].text = _('N/A')
 			self.notdata = True
@@ -379,12 +400,21 @@ class WeatherInfo(Screen):
 		else:
 			self["sunset"].text = _('N/A')
 			self.notdata = True
+			
 		self["picon_now"].instance.setScale(1)
 		if not self.condition['code'] is '':
 			self["picon_now"].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.condition['code']))
 		else:
 			self["picon_now"].instance.setPixmapFromFile(defpicon)
 		self["picon_now"].instance.show()
+		if not config.plugins.yweather.timeout.value is '0':
+			self.Timer.callback.append(self.endshow)
+			self.Timer.startLongTimer(int(config.plugins.yweather.timeout.value))
+			
+	def endshow(self):
+		if not config.plugins.yweather.timeout.value is '0':
+			self.Timer.stop()
+			self.close(False)
 
 	def get_xmlfile(self):
 		if self.isServerOnline():
@@ -434,7 +464,7 @@ class WeatherInfo(Screen):
 			return what + '%s' % unichr(176).encode("latin-1")
 ##############################################################################
 SKIN_STYLE1_HD = """
-<screen name="WeatherInfo" position="365,75" size="550,590" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
+<screen name="WeatherInfo" position="365,90" size="550,590" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
     <widget source="city_locale" render="Label" position="150,2" size="250,30" zPosition="3" font="Regular; 27" halign="center" transparent="1" valign="center" />
     <eLabel position="20,181" size="512,2" backgroundColor="#00aaaaaa" zPosition="5" />
     <eLabel position="20,385" size="512,2" backgroundColor="#00aaaaaa" zPosition="5" />
@@ -507,6 +537,8 @@ SKIN_CONFIG_HD = """
   <widget source="key_green" render="Label" position="175,468" zPosition="2" size="165,30" font="Regular;20" halign="center" valign="center" transparent="1" />
   <ePixmap position="340,498" zPosition="1" size="195,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/YWfH/images/yellow.png" alphatest="blend" />
   <widget source="key_yellow" render="Label" position="340,468" zPosition="2" size="195,30" font="Regular;20" halign="center" valign="center" transparent="1" />
+  <ePixmap position="535,498" zPosition="1" size="195,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/YWfH/images/blue.png" alphatest="blend" />
+  <widget source="key_blue" render="Label" position="535,468" zPosition="2" size="195,30" font="Regular;20" halign="center" valign="center" transparent="1" />
   <widget name="text" position="50,175" size="650,150" font="Regular;22" halign="left" noWrap="1" />
   <widget name="icon1" position="100,336" size="96,96" zPosition="2" alphatest="blend" />
   <widget name="icon2" position="245,336" size="96,96" zPosition="2" alphatest="blend" />
@@ -514,25 +546,38 @@ SKIN_CONFIG_HD = """
   <widget name="icon4" position="535,336" size="96,96" zPosition="2" alphatest="blend" />
 </screen>"""
 
+SKIN_SEARCH_HD = """
+<screen name="search_setup" position="center,140" size="750,505" title="2boom's Yahoo Weather">
+  <widget position="15,10" size="720,50" name="config" scrollbarMode="showOnDemand" />
+  <eLabel position="30,65" size="690,2" backgroundColor="#00aaaaaa" zPosition="5" />
+  <ePixmap position="10,498" zPosition="1" size="165,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/YWfH/images/red.png" alphatest="blend" />
+  <widget source="key_red" render="Label" position="10,468" zPosition="2" size="165,30" font="Regular;20" halign="center" valign="center" transparent="1" />
+  <ePixmap position="175,498" zPosition="1" size="165,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/YWfH/images/green.png" alphatest="blend" />
+  <widget source="key_green" render="Label" position="175,468" zPosition="2" size="165,30" font="Regular;20" halign="center" valign="center" transparent="1" />
+  <ePixmap position="340,498" zPosition="1" size="195,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/YWfH/images/yellow.png" alphatest="blend" />
+  <widget source="key_yellow" render="Label" position="340,468" zPosition="2" size="195,30" font="Regular;20" halign="center" valign="center" transparent="1" />
+  <widget name="text" position="50,75" size="650,150" font="Regular;22" halign="left" noWrap="1" />
+</screen>"""
+
 class yweather_setup(Screen, ConfigListScreen):
 	def __init__(self, session):
 		self.session = session
 		Screen.__init__(self, session)
-		#if getDesktop(0).size().width() > 1280:
-			#self.skin = SKIN_CONFIG_FHD
-		#else:
 		self.skin = SKIN_CONFIG_HD
 		config.plugins.yweather.istyle = ConfigSelection(choices = iconsdirs())
 		self.setTitle(_("2boom's Yahoo! Weather"))
 		self.list = []
-		self.list.append(getConfigListEntry(_("City code"), config.plugins.yweather.weather_city))
-		self.list.append(getConfigListEntry(_("City name"), config.plugins.yweather.weather_city_locale))
+		self.list.append(getConfigListEntry(_("City code (woeid)"), config.plugins.yweather.weather_city))
+		self.list.append(getConfigListEntry(_("City name (alias)"), config.plugins.yweather.weather_city_locale))
+		self.list.append(getConfigListEntry(_("Weather info timeout"), config.plugins.yweather.timeout))
+		# self.list.append(getConfigListEntry(_("Weather icons style"), config.plugins.yweather.istyle))
 		self.list.append(getConfigListEntry(_("User skin"), config.plugins.yweather.skin))
 		ConfigListScreen.__init__(self, self.list, session=session)
 		self["text"] = ScrollLabel("")
 		self["key_red"] = StaticText(_("Close"))
 		self["key_green"] = StaticText(_("Save"))
 		self["key_yellow"] = StaticText(_("Restart"))
+		self["key_blue"] = StaticText(_("Get WOEID"))
 		self["text"].setText(help_txt)
 		for item in ('1', '2', '3', '4'):
 			self["icon" + item ] = Pixmap()
@@ -542,15 +587,30 @@ class yweather_setup(Screen, ConfigListScreen):
 			"cancel": self.cancel,
 			"green": self.save,
 			"yellow": self.restart,
+			"blue": self.get_woeid,
 			"ok": self.save
 		}, -2)
-
+		# self.onLayoutFinish.append(self.showicon)
+		
+	def get_woeid(self):
+		self.session.open(search_setup)
+		
+	# def showicon(self):
+		# count = 1
+		# for number in ('8', '18', '22', '32'):
+			# if fileExists("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, number)):
+				# self["icon%s" % str(count)].instance.setScale(1)
+				# self["icon%s" % str(count)].instance.setPixmapFromFile("%sExtensions/YWfH/istyle/%s/%s.png" % (resolveFilename(SCOPE_PLUGINS), config.plugins.yweather.istyle.value, number))
+				# self["icon%s" % str(count)].instance.show()
+			# count += 1
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
+		# self.showicon()
 
 	def keyRight(self):
 		ConfigListScreen.keyRight(self)
+		# self.showicon()
 
 	def restart(self):
 		self.session.open(TryQuitMainloop, 3)
@@ -565,6 +625,92 @@ class yweather_setup(Screen, ConfigListScreen):
 			i[1].save()
 		configfile.save()
 		self.mbox = self.session.open(MessageBox,(_("configuration is saved")), MessageBox.TYPE_INFO, timeout = 4 )
+		
+class search_setup(Screen, ConfigListScreen):
+	def __init__(self, session):
+		self.session = session
+		Screen.__init__(self, session)
+		self.skin = SKIN_SEARCH_HD
+		config.plugins.yweather.weather_city_locale_search.value = ''
+		self.setTitle(_("2boom's Yahoo! Weather"))
+		self.list = []
+		self.code_woeid = ''
+		self.place_name = ''
+		self.list.append(getConfigListEntry(_("The name of the location"), config.plugins.yweather.weather_city_locale_search))
+		ConfigListScreen.__init__(self, self.list, session=session)
+		self["text"] = ScrollLabel("")
+		self["key_red"] = StaticText(_("Close"))
+		self["key_green"] = StaticText(_("Save"))
+		self["key_yellow"] = StaticText(_("Get"))
+
+		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
+		{
+			"red": self.cancel,
+			"cancel": self.cancel,
+			"green": self.save,
+			"yellow": self.get_woeid,
+			"ok": self.save
+		}, -2)
+		self.onLayoutFinish.append(self.show_woeid)
+		
+	def show_woeid(self):
+		self["text"].setText(_('no woeid code yet'))
+		
+	def parse_woeid_data(self):
+		if os.path.exists("/tmp/woeid.xml"):
+			woeid_line = open('/tmp/woeid.xml').read()
+			os.remove("/tmp/woeid.xml")
+			self.code_woeid = self.get_data_inline(woeid_line, 'woeid')
+			self.place_name = self.get_data_inline(woeid_line, 'name')
+			if 'yahoo:uri' in woeid_line:
+				self["text"].setText(self.get_data_inline(woeid_line, 'woeid') + '\n' + self.get_data_inline(woeid_line, 'name') + '\n' + self.get_lastdata_inline(woeid_line, 'admin1') + '\n' + self.get_lastdata_inline(woeid_line, 'country'))
+			else:
+				self["text"].setText(_('error location name'))
+		else:
+			self["text"].setText(_('/tmp/woeid.xml not found'))
+	
+	def get_data_inline(self, line, what):
+		return line.split('</' + what + '>')[0].split('<' + what + '>')[-1]
+	
+	def get_lastdata_inline(self, line, what):
+		return line.split('</' + what + '>')[0].split('>')[-1]
+		
+	def cancel(self):
+		for i in self["config"].list:
+			i[1].cancel()
+		config.plugins.yweather.weather_city_locale_search.value = ''
+		if os.path.exists("/tmp/woeid.xml"):
+			os.remove("/tmp/woeid.xml")
+		self.close(False)
+
+	def save(self):
+		config.plugins.yweather.weather_city.value = self.code_woeid
+		config.plugins.yweather.weather_city_locale.value = self.place_name
+		config.plugins.yweather.weather_city_locale_search.value = ''
+		config.plugins.yweather.weather_city_locale_search.save()
+		config.plugins.yweather.weather_city_locale.save()
+		config.plugins.yweather.weather_city.save()
+		configfile.save()
+		if os.path.exists("/tmp/woeid.xml"):
+			os.remove("/tmp/woeid.xml")
+		if os.path.exists("/tmp/yweather.xml"):
+			os.remove("/tmp/yweather.xml")
+		self.mbox = self.session.open(MessageBox,(_("configuration is saved")), MessageBox.TYPE_INFO, timeout = 4 )
+		
+	def get_woeid(self):
+		if self.isServerOnline():
+			urllib.urlretrieve ("http://where.yahooapis.com/v1/places.q('%s')?appid=dj0yJmk9QmFoVGxPMzBiV282JmQ9WVdrOU5XbE5hVWxrTnpRbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD0xMw--" % config.plugins.yweather.weather_city_locale_search.value, "/tmp/woeid.xml")
+			self.parse_woeid_data()
+		else:
+			self["text"].setText('/tmp/woeid.xml not found')
+			
+	def isServerOnline(self):
+		try:
+			socket.gethostbyaddr('where.yahooapis.com')
+		except:
+			return False
+		return True
+
 
 def main(session, **kwargs):
 	session.open(WeatherInfo)
