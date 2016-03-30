@@ -207,7 +207,7 @@ class YWeather(Poll, Converter, object):
 		self.iConsole.ePopen("echo -e 'None' >> /tmp/yweather.xml")
 		
 	def get_xmlfile(self):
-		self.iConsole.ePopen("wget -P /tmp -T2 'http://weather.yahooapis.com/forecastrss?w=%s&d=10&u=c' -O /tmp/yweather.xml" % config.plugins.yweather.weather_city.value, self.control_xml)
+		self.iConsole.ePopen("wget -P /tmp -T2 'http://xml.weather.yahoo.com/forecastrss?w=%s&d=10&u=c' -O /tmp/yweather.xml" % config.plugins.yweather.weather_city.value, self.control_xml)
 		
 	def control_xml(self, result, retval, extra_args):
 		if retval is not 0:

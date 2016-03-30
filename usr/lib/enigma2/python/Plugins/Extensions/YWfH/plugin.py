@@ -1,7 +1,7 @@
  # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.3-r2
+# v.0.3.1-r2
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -418,7 +418,7 @@ class WeatherInfo(Screen):
 
 	def get_xmlfile(self):
 		if self.isServerOnline():
-			xmlfile = "http://weather.yahooapis.com/forecastrss?w=%s&d=10&u=c" % config.plugins.yweather.weather_city.value
+			xmlfile = "http://xml.weather.yahoo.com/forecastrss?w=%s&d=10&u=c" % config.plugins.yweather.weather_city.value
 			downloadPage(xmlfile, "/tmp/yweather.xml").addCallback(self.downloadFinished).addErrback(self.downloadFailed)
 		else:
 			self["text_now"].text = _('weatherserver not respond')
