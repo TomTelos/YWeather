@@ -1,7 +1,7 @@
- # Yahoo! weather for Hotkey
+# Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.3.1-r2
+# v.0.3.1-r3
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -36,6 +36,7 @@ from Screens.MessageBox import MessageBox
 from Screens.Standby import TryQuitMainloop
 from Screens.Screen import Screen
 import urllib
+import xml.dom.minidom
 
 lang = language.getLanguage()
 os.environ["LANGUAGE"] = lang[:2]
@@ -59,7 +60,7 @@ def iconsdirs():
 
 config.plugins.yweather = ConfigSubsection()
 config.plugins.yweather.weather_city = ConfigText(default="502075", visible_width = 70, fixed_size = False)
-config.plugins.yweather.weather_city_locale = ConfigText(default="Krakow", visible_width = 170, fixed_size = False)
+config.plugins.yweather.weather_city_locale = ConfigText(default="Kraków", visible_width = 170, fixed_size = False)
 config.plugins.yweather.weather_city_locale_search = ConfigText(default="", visible_width = 170, fixed_size = False)
 config.plugins.yweather.enabled = ConfigYesNo(default=True)
 config.plugins.yweather.skin = ConfigYesNo(default=False)
@@ -115,14 +116,16 @@ class WeatherInfo(Screen):
 		self["temp_now_max"] = StaticText()
 		self["feels_like"] = StaticText()
 		self["wind"] = StaticText()
+		self["wind_mph"] = StaticText()
+		self["wind_ms"] = StaticText()
 		self["text_now"] = StaticText()
+		self["pressure_inhg"] = StaticText()
+		self["pressure_mmhg"] = StaticText()
 		self["pressure"] = StaticText()
 		self["humidity"] = StaticText()
 		self["city_locale"] = StaticText()
 		self["picon_now"] = Pixmap()
 		self["tomorrow"] = StaticText(_('Tomorrow'))
-		self["pressure_hpa"] = StaticText()
-		self["wind_kmh"] = StaticText()
 		self["sunrise"] = StaticText()
 		self["sunset"] = StaticText()
 		self["date"] = StaticText()
@@ -155,7 +158,7 @@ class WeatherInfo(Screen):
 
 	def isServerOnline(self):
 		try:
-			socket.gethostbyaddr('weather.yahooapis.com')
+			socket.gethostbyaddr('query.yahooapis.com')
 		except:
 			return False
 		return True
@@ -169,7 +172,11 @@ class WeatherInfo(Screen):
 
 	def parse_weather_data(self):
 		self.forecast = []
-		for line in open("/tmp/yweather.xml"):
+		# for line in open("/tmp/yweather.xml"):
+		xml_file = xml.dom.minidom.parse("/tmp/yweather.xml")
+		pretty_xml_file = xml_file.toprettyxml()
+		pretty_xml_lines = pretty_xml_file.splitlines()
+		for line in pretty_xml_lines:
 			if '<yweather:location' in line:
 				self.location['city'] = self.get_data(line, 'city')
 				self.location['country'] = self.get_data(line, 'country')
@@ -197,12 +204,14 @@ class WeatherInfo(Screen):
 		for data in ('day', 'date', 'low', 'high', 'text', 'code'):
 			for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 				self.forecastdata[data + daynumber] = ''
+		# print self.forecastdata
 		if len(self.forecast) is 10:
 			for data in ('day', 'date', 'low', 'high', 'text', 'code'):
 				for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 					self.forecastdata[data + daynumber] = self.get_data(self.forecast[int(daynumber)], data)
 		else:
 			self.notdata = True
+		# print self.forecastdata
 		if len(config.plugins.yweather.weather_city_locale.value) > 0:
 			self["city_locale"].text = config.plugins.yweather.weather_city_locale.value
 		for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
@@ -223,6 +232,8 @@ class WeatherInfo(Screen):
 			if self.forecastdata['low0'] is not '' and self.forecastdata['high0'] is not '':
 				self["temp_now_min"].text = _('min: %s') % self.tempsing(self.forecastdata['low0'])
 				self["temp_now_max"].text = _('max: %s') % self.tempsing(self.forecastdata['high0'])
+				# self["temp_now_min"].text = _('min: %s') % str(self.tempsing(self.forecastdata['low0']))
+				# self["temp_now_max"].text = _('max: %s') % str(self.tempsing(self.forecastdata['high0']))
 			else:
 				self["temp_now_min"].text = _('N/A')
 				self["temp_now_max"].text = _('N/A')
@@ -233,17 +244,19 @@ class WeatherInfo(Screen):
 				self["temp_" + day].text = _('N/A')
 				self.notdata = True
 		defpicon = "%sweather_icons/%s/3200.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value)
+
 		for daynumber in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
 			day = 'day' + daynumber
 			self["picon_" + day].instance.setScale(1)
 			if self.forecastdata['code' + daynumber] is not '':
 				self["text_" + day].text = self.text[self.forecastdata['code' + daynumber]]
-				self["picon_" + day].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.forecastdata['code' + daynumber]))			
+				self["picon_" + day].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.forecastdata['code' + daynumber]))
 			else:
 				self["text_" + day].text = _('N/A')
 				self["picon_" + day].instance.setPixmapFromFile(defpicon)
 				self.notdata = True
 			self["picon_" + day].instance.show()
+
 		if self.condition['temp'] is not '':
 			self["temp_now"].text = self.tempsing(self.condition['temp'])
 			self["temp_now_nounits"].text = self.tempsing_nu(self.condition['temp'])
@@ -251,126 +264,157 @@ class WeatherInfo(Screen):
 			self["temp_now"].text = _('N/A')
 			self["temp_now_nounits"].text = _('N/A')
 			self.notdata = True
-			
+
 		if self.condition['date'] is not '':
 			self["date"].text = self.tempsing(self.condition['date']).replace('+', '')
 		else:
 			self["date"].text = _('N/A')
 			self.notdata = True
-			
+
 		if self.wind['chill'] is not '':
-			self["feels_like"].text = _('Feels: %s') % self.tempsing(self.wind['chill'])
+			# tak powinno być, ale wynik jest zawsze w Fahrenheitach, więc przelicznik
+			#self["feels_like"].text = _('Feels: %s') % self.tempsing(self.wind['chill'])
+			chill_temp = (5.0/9.0) * (float(self.wind['chill']) - 32)
+			chill_temp_str = '%d' % round(chill_temp)
+			self["feels_like"].text = _('Feels: %s') % self.tempsing(chill_temp_str)
 		else:
 			self["feels_like"].text = _('N/A')
 			self.notdata = True
+
 		if not self.condition['code'] is '' and not self.wind['speed'] is '':
 			direct = int(self.condition['code'])
-			tmp_wind = (float(self.wind['speed']) * 3600)/3600
-			if direct >= 0 and direct <= 20:
-				self["wind"].text = _('N, %3.02f m/s') % tmp_wind
-			elif direct >= 21 and direct <= 35:
-				self["wind"].text = _('NNE, %3.02f m/s') % tmp_wind
-			elif direct >= 36 and direct <= 55:
-				self["wind"].text = _('NE, %3.02f m/s') % tmp_wind
-			elif direct >= 56 and direct <= 70:
-				self["wind"].text = _('ENE, %3.02f m/s') % tmp_wind
-			elif direct >= 71 and direct <= 110:
-				self["wind"].text = _('E, %3.02f m/s') % tmp_wind
-			elif direct >= 111 and direct <= 125:
-				self["wind"].text = _('ESE, %3.02f m/s') % tmp_wind
-			elif direct >= 126 and direct <= 145:
-				self["wind"].text = _('SE, %3.02f m/s') % tmp_wind
-			elif direct >= 146 and direct <= 160:
-				self["wind"].text = _('SSE, %3.02f m/s') % tmp_wind
-			elif direct >= 161 and direct <= 200:
-				self["wind"].text = _('S, %3.02f m/s') % tmp_wind
-			elif direct >= 201 and direct <= 215:
-				self["wind"].text = _('SSW, %3.02f m/s') % tmp_wind
-			elif direct >= 216 and direct <= 235:
-				self["wind"].text = _('SW, %3.02f m/s') % tmp_wind
-			elif direct >= 236 and direct <= 250:
-				self["wind"].text = _('WSW, %3.02f m/s') % tmp_wind
-			elif direct >= 251 and direct <= 290:
-				self["wind"].text = _('W, %3.02f m/s') % tmp_wind
-			elif direct >= 291 and direct <= 305:
-				self["wind"].text = _('WNW, %3.02f m/s') % tmp_wind
-			elif direct >= 306 and direct <= 325:
-				self["wind"].text = _('NW, %3.02f m/s') % tmp_wind
-			elif direct >= 326 and direct <= 340:
-				self["wind"].text = _('NNW, %3.02f m/s') % tmp_wind
-			elif direct >= 341 and direct <= 360:
-				self["wind"].text = _('N, %3.02f m/s') % tmp_wind
+			if self.units["speed"] == 'mph':
+				tmp_wind_mph = float(self.wind['speed']) * 1.0
+				tmp_wind_kmh = float(self.wind['speed']) * 1.609
+				tmp_wind_ms = float(self.wind['speed']) * 0.447
 			else:
+				# self.units["speed"] == 'km/h':
+				tmp_wind_mph = float(self.wind['speed']) * 0.6214
+				tmp_wind_kmh = float(self.wind['speed']) * 1.0
+				tmp_wind_ms = float(self.wind['speed']) * 0.2778
+			if direct >= 0 and direct <= 20:
+				self["wind_mph"].text = _('N, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('N, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('N, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 21 and direct <= 35:
+				self["wind_mph"].text = _('NNE, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('NNE, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('NNE, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 36 and direct <= 55:
+				self["wind_mph"].text = _('NE, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('NE, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('NE, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 56 and direct <= 70:
+				self["wind_mph"].text = _('ENE, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('ENE, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('ENE, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 71 and direct <= 110:
+				self["wind_mph"].text = _('E, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('E, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('E, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 111 and direct <= 125:
+				self["wind_mph"].text = _('ESE, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('ESE, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('ESE, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 126 and direct <= 145:
+				self["wind_mph"].text = _('SE, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('SE, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('SE, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 146 and direct <= 160:
+				self["wind_mph"].text = _('SSE, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('SSE, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('SSE, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 161 and direct <= 200:
+				self["wind_mph"].text = _('S, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('S, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('S, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 201 and direct <= 215:
+				self["wind_mph"].text = _('SSW, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('SSW, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('SSW, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 216 and direct <= 235:
+				self["wind_mph"].text = _('SW, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('SW, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('SW, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 236 and direct <= 250:
+				self["wind_mph"].text = _('WSW, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('WSW, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('WSW, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 251 and direct <= 290:
+				self["wind_mph"].text = _('W, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('W, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('W, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 291 and direct <= 305:
+				self["wind_mph"].text = _('WNW, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('WNW, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('WNW, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 306 and direct <= 325:
+				self["wind_mph"].text = _('NW, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('NW, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('NW, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 326 and direct <= 340:
+				self["wind_mph"].text = _('NNW, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('NNW, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('NNW, %.1f km/h') % tmp_wind_kmh
+			elif direct >= 341 and direct <= 360:
+				self["wind_mph"].text = _('N, %.1f mph') % tmp_wind_mph
+				self["wind_ms"].text = _('N, %.1f m/s') % tmp_wind_ms
+				self["wind"].text = _('N, %.1f km/h') % tmp_wind_kmh
+			else:
+				self["wind_mph"].text = _('N/A')
+				self["wind_ms"].text = _('N/A')
 				self["wind"].text = _('N/A')
 				self.notdata = True
-		if not self.condition['code'] is '' and not self.wind['speed'] is '':
-			direct = int(self.condition['code'])
-			if direct >= 0 and direct <= 20:
-				self["wind_kmh"].text = _('N, %s km/h') % self.wind['speed']
-			elif direct >= 21 and direct <= 35:
-				self["wind_kmh"].text = _('NNE, %s km/h') % self.wind['speed']
-			elif direct >= 36 and direct <= 55:
-				self["wind_kmh"].text = _('NE, %s km/h') % self.wind['speed']
-			elif direct >= 56 and direct <= 70:
-				self["wind_kmh"].text = _('ENE, %s km/h') % self.wind['speed']
-			elif direct >= 71 and direct <= 110:
-				self["wind_kmh"].text = _('E, %s km/h') % self.wind['speed']
-			elif direct >= 111 and direct <= 125:
-				self["wind_kmh"].text = _('ESE, %s km/h') % self.wind['speed']
-			elif direct >= 126 and direct <= 145:
-				self["wind_kmh"].text = _('SE, %s km/h') % self.wind['speed']
-			elif direct >= 146 and direct <= 160:
-				self["wind_kmh"].text = _('SSE, %s km/h') % self.wind['speed']
-			elif direct >= 161 and direct <= 200:
-				self["wind_kmh"].text = _('S, %s km/h') % self.wind['speed']
-			elif direct >= 201 and direct <= 215:
-				self["wind_kmh"].text = _('SSW, %s km/h') % self.wind['speed']
-			elif direct >= 216 and direct <= 235:
-				self["wind_kmh"].text = _('SW, %s km/h') % self.wind['speed']
-			elif direct >= 236 and direct <= 250:
-				self["wind_kmh"].text = _('WSW, %s km/h') % self.wind['speed']
-			elif direct >= 251 and direct <= 290:
-				self["wind_kmh"].text = _('W, %s km/h') % self.wind['speed']
-			elif direct >= 291 and direct <= 305:
-				self["wind_kmh"].text = _('WNW, %s km/h') % self.wind['speed']
-			elif direct >= 306 and direct <= 325:
-				self["wind_kmh"].text = _('NW, %s km/h') % self.wind['speed']
-			elif direct >= 326 and direct <= 340:
-				self["wind_kmh"].text = _('NNW, %s km/h') % self.wind['speed']
-			elif direct >= 341 and direct <= 360:
-				self["wind_kmh"].text = _('N, %s km/h') % self.wind['speed']
-			else:
-				self["wind_kmh"].text = _('N/A')
-				self.notdata = True
 		else:
+			self["wind_mph"].text = _('N/A')
+			self["wind_ms"].text = _('N/A')
+			self["wind"].text = _('N/A')
 			self.notdata = True
+
 		if not self.condition['code'] is '':
 			self["text_now"].text = self.text[self.condition['code']]
 		else:
 			self["text_now"].text = _('N/A')
 			self.notdata = True
+
 		if not self.atmosphere['pressure'] is '':
-			tmp_pressure = round(float(self.atmosphere['pressure']) * 1.0)
-			self["pressure"].text = _("%d mmHg") % tmp_pressure
+			if self.units["pressure"] == 'in':
+				# tak powinno być, ale jest błąd w danych w XMLu :(
+				#tmp_pressure_inhg = float(self.atmosphere['pressure']) * 1.0
+				#tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 25.4)
+				#tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 33.864)
+				tmp_pressure_inhg = float(self.atmosphere['pressure']) * 0.02953
+				tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 0.75)
+				tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 1.0)
+			else: # self.units["pressure"] == 'mb'
+				# tak powinno być, ale jest błąd w danych w XMLu :(
+				#tmp_pressure_inhg = float(self.atmosphere['pressure']) * 0.02953
+				#tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 0.75)
+				#tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 1.0)
+				tmp_pressure_inhg = float(self.atmosphere['pressure']) * 0.02953 * 0.02953
+				tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 0.75 * 0.02953)
+				tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 1.0 * 0.02953)
+			self["pressure_inhg"].text = _("%.1f inHg") % tmp_pressure_inhg
+			self["pressure_mmhg"].text = _("%d mmHg") % tmp_pressure_mmhg
+			self["pressure"].text = _("%d hPa(mbar)") % tmp_pressure_hpa
 		else:
+			self["pressure_inhg"].text = _('N/A')
+			self["pressure_mmhg"].text = _('N/A')
 			self["pressure"].text = _('N/A')
 			self.notdata = True
-		if not self.atmosphere['pressure'] is '':
-			self["pressure_hpa"].text = _("%s hPa(mbar)") % self.atmosphere['pressure']
-		else:
-			self["pressure_hpa"].text = _('N/A')
-			self.notdata = True
+
 		if not self.atmosphere['humidity'] is '':
 			self["humidity"].text = _('%s%% humidity') % self.atmosphere['humidity']
 		else:
 			self["humidity"].text = _('N/A')
 			self.notdata = True
+
 		if not self.atmosphere['visibility'] is '':
 			self["visibility"].text = _('%s km') % self.atmosphere['visibility']
 		else:
 			self["visibility"].text = _('N/A')
 			self.notdata = True
-			
+
 		if not self.geo['lat'] is '':
 			if self.geo['lat'].startswith('-'):
 				self["lat"].text = '%s S' % self.geo['lat']
@@ -379,7 +423,7 @@ class WeatherInfo(Screen):
 		else:
 			self["lat"].text = _('N/A')
 			self.notdata = True
-			
+
 		if not self.geo['long'] is '':
 			if self.geo['long'].startswith('-'):
 				self["long"].text = '%s W' % self.geo['long']
@@ -388,29 +432,30 @@ class WeatherInfo(Screen):
 		else:
 			self["long"].text = _('N/A')
 			self.notdata = True
-			
+
 		if not self.astronomy['sunrise'] is '':
 			self["sunrise"].text = _('%s') % self.time_convert(self.astronomy['sunrise'])
 		else:
 			self["sunrise"].text = _('N/A')
 			self.notdata = True
-			
+
 		if not self.astronomy['sunset'] is '':
 			self["sunset"].text = _('%s') % self.time_convert(self.astronomy['sunset'])
 		else:
 			self["sunset"].text = _('N/A')
 			self.notdata = True
-			
+
 		self["picon_now"].instance.setScale(1)
 		if not self.condition['code'] is '':
 			self["picon_now"].instance.setPixmapFromFile("%sweather_icons/%s/%s.png" % (resolveFilename(SCOPE_SKIN), config.plugins.yweather.istyle.value, self.condition['code']))
 		else:
 			self["picon_now"].instance.setPixmapFromFile(defpicon)
 		self["picon_now"].instance.show()
+
 		if not config.plugins.yweather.timeout.value is '0':
 			self.Timer.callback.append(self.endshow)
 			self.Timer.startLongTimer(int(config.plugins.yweather.timeout.value))
-			
+
 	def endshow(self):
 		if not config.plugins.yweather.timeout.value is '0':
 			self.Timer.stop()
@@ -418,7 +463,9 @@ class WeatherInfo(Screen):
 
 	def get_xmlfile(self):
 		if self.isServerOnline():
-			xmlfile = "http://xml.weather.yahoo.com/forecastrss?w=%s&d=10&u=c" % config.plugins.yweather.weather_city.value
+			# xmlfile = "http://weather.yahooapis.com/forecastrss?w=%s&d=10&u=c" % config.plugins.yweather.weather_city.value
+			xmlfile = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20(woeid='+config.plugins.yweather.weather_city.value+'%20and%20u=%27C%27)&format=xml'
+			# print "[YWeather] link: %s" % xmlfile
 			downloadPage(xmlfile, "/tmp/yweather.xml").addCallback(self.downloadFinished).addErrback(self.downloadFailed)
 		else:
 			self["text_now"].text = _('weatherserver not respond')
@@ -442,26 +489,34 @@ class WeatherInfo(Screen):
 		self.parse_weather_data()
 
 	def downloadFailed(self, result):
-		self.notdata = True
 		print "[YWeather] Download failed!"
+		self.notdata = True
 
 	def get_data(self, line, what):
-		return line.split(what)[-1].split('"')[1]
+		return str(line.split(what)[-1].split('"')[1])
 
 	def get_data_xml(self, line):
 		return line.split('</')[0].split('>')[1] 
 
 	def tempsing(self, what):
 		if not what[0] is '-' and not what[0] is '0':
-			return '+' + what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
+			# return '+' + what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
+			return str('+' + what + '%s' % u"\u00B0" + self.units['temperature'])
+			# return '+' + what + '%s' % self.units['temperature']
 		else:
-			return what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
+			# return what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
+			return str(what + '%s' % u"\u00B0" + self.units['temperature'])
+			# return what + '%s' % self.units['temperature']
 
 	def tempsing_nu(self, what):
 		if not what[0] is '-' and not what[0] is '0':
-			return '+' + what + '%s' % unichr(176).encode("latin-1")
+			# return '+' + what + '%s' % unichr(176).encode("latin-1")
+			return str('+' + what + '%s' % u"\u00B0")
+			# return '+' + what + '%s' % ''
 		else:
-			return what + '%s' % unichr(176).encode("latin-1")
+			# return what + '%s' % unichr(176).encode("latin-1")
+			return str(what + '%s' % u"\u00B0")
+			# return what + '%s' % ''
 ##############################################################################
 SKIN_STYLE1_HD = """
 <screen name="WeatherInfo" position="365,90" size="550,590" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
@@ -571,7 +626,7 @@ class yweather_setup(Screen, ConfigListScreen):
 		self.list.append(getConfigListEntry(_("City name (alias)"), config.plugins.yweather.weather_city_locale))
 		self.list.append(getConfigListEntry(_("Weather info timeout"), config.plugins.yweather.timeout))
 		# self.list.append(getConfigListEntry(_("Weather icons style"), config.plugins.yweather.istyle))
-		self.list.append(getConfigListEntry(_("User skin"), config.plugins.yweather.skin))
+		self.list.append(getConfigListEntry(_("Alternative skin"), config.plugins.yweather.skin))
 		ConfigListScreen.__init__(self, self.list, session=session)
 		self["text"] = ScrollLabel("")
 		self["key_red"] = StaticText(_("Close"))
