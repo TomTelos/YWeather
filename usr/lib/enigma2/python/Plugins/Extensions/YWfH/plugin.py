@@ -1,7 +1,7 @@
 # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.3.1-r3
+# v.0.3.2
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +22,7 @@ import time
 import gettext
 import socket
 from enigma import eTimer
-from twisted.web.client import downloadPage
+from twisted.web.client import downloadPage, reactor
 from Plugins.Plugin import PluginDescriptor
 from Components.ActionMap import ActionMap
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE, SCOPE_SKIN
@@ -36,7 +36,7 @@ from Screens.MessageBox import MessageBox
 from Screens.Standby import TryQuitMainloop
 from Screens.Screen import Screen
 import urllib
-import xml.dom.minidom
+# import xml.dom.minidom
 
 lang = language.getLanguage()
 os.environ["LANGUAGE"] = lang[:2]
@@ -173,10 +173,14 @@ class WeatherInfo(Screen):
 	def parse_weather_data(self):
 		self.forecast = []
 		# for line in open("/tmp/yweather.xml"):
-		xml_file = xml.dom.minidom.parse("/tmp/yweather.xml")
-		pretty_xml_file = xml_file.toprettyxml()
-		pretty_xml_lines = pretty_xml_file.splitlines()
-		for line in pretty_xml_lines:
+		# xml_file = xml.dom.minidom.parse("/tmp/yweather.xml")
+		# pretty_xml_file = xml_file.toprettyxml()
+		# pretty_xml_lines = pretty_xml_file.splitlines()
+		# for line in pretty_xml_lines:
+		xml_lines = open('/tmp/yweather.xml','r').read().split('<')
+		# pretty_xml_lines = xml_file.split()
+		for line in xml_lines:
+			line = "<"+line
 			if '<yweather:location' in line:
 				self.location['city'] = self.get_data(line, 'city')
 				self.location['country'] = self.get_data(line, 'country')
@@ -467,6 +471,7 @@ class WeatherInfo(Screen):
 			xmlfile = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20(woeid='+config.plugins.yweather.weather_city.value+'%20and%20u=%27C%27)&format=xml'
 			# print "[YWeather] link: %s" % xmlfile
 			downloadPage(xmlfile, "/tmp/yweather.xml").addCallback(self.downloadFinished).addErrback(self.downloadFailed)
+			# reactor.run()
 		else:
 			self["text_now"].text = _('weatherserver not respond')
 			self.notdata = True
@@ -491,9 +496,11 @@ class WeatherInfo(Screen):
 	def downloadFailed(self, result):
 		print "[YWeather] Download failed!"
 		self.notdata = True
+		# reactor.stop()
 
 	def get_data(self, line, what):
-		return str(line.split(what)[-1].split('"')[1])
+		# return str(line.split(what)[-1].split('"')[1])
+		return line.split(what)[-1].split('"')[1]
 
 	def get_data_xml(self, line):
 		return line.split('</')[0].split('>')[1] 
