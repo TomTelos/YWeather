@@ -1,7 +1,7 @@
 # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.3.2
+# v.0.3.3
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -60,7 +60,7 @@ def iconsdirs():
 
 config.plugins.yweather = ConfigSubsection()
 config.plugins.yweather.weather_city = ConfigText(default="502075", visible_width = 70, fixed_size = False)
-config.plugins.yweather.weather_city_locale = ConfigText(default="Kraków", visible_width = 170, fixed_size = False)
+config.plugins.yweather.weather_city_locale = ConfigText(default="Krakow", visible_width = 170, fixed_size = False)
 config.plugins.yweather.weather_city_locale_search = ConfigText(default="", visible_width = 170, fixed_size = False)
 config.plugins.yweather.enabled = ConfigYesNo(default=True)
 config.plugins.yweather.skin = ConfigYesNo(default=False)
@@ -172,13 +172,7 @@ class WeatherInfo(Screen):
 
 	def parse_weather_data(self):
 		self.forecast = []
-		# for line in open("/tmp/yweather.xml"):
-		# xml_file = xml.dom.minidom.parse("/tmp/yweather.xml")
-		# pretty_xml_file = xml_file.toprettyxml()
-		# pretty_xml_lines = pretty_xml_file.splitlines()
-		# for line in pretty_xml_lines:
 		xml_lines = open('/tmp/yweather.xml','r').read().split('<')
-		# pretty_xml_lines = xml_file.split()
 		for line in xml_lines:
 			line = "<"+line
 			if '<yweather:location' in line:
@@ -276,7 +270,6 @@ class WeatherInfo(Screen):
 			self.notdata = True
 
 		if self.wind['chill'] is not '':
-			# tak powinno być, ale wynik jest zawsze w Fahrenheitach, więc przelicznik
 			#self["feels_like"].text = _('Feels: %s') % self.tempsing(self.wind['chill'])
 			chill_temp = (5.0/9.0) * (float(self.wind['chill']) - 32)
 			chill_temp_str = '%d' % round(chill_temp)
@@ -383,7 +376,6 @@ class WeatherInfo(Screen):
 
 		if not self.atmosphere['pressure'] is '':
 			if self.units["pressure"] == 'in':
-				# tak powinno być, ale jest błąd w danych w XMLu :(
 				#tmp_pressure_inhg = float(self.atmosphere['pressure']) * 1.0
 				#tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 25.4)
 				#tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 33.864)
@@ -391,7 +383,6 @@ class WeatherInfo(Screen):
 				tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 0.75)
 				tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 1.0)
 			else: # self.units["pressure"] == 'mb'
-				# tak powinno być, ale jest błąd w danych w XMLu :(
 				#tmp_pressure_inhg = float(self.atmosphere['pressure']) * 0.02953
 				#tmp_pressure_mmhg = round(float(self.atmosphere['pressure']) * 0.75)
 				#tmp_pressure_hpa = round(float(self.atmosphere['pressure']) * 1.0)
@@ -507,23 +498,23 @@ class WeatherInfo(Screen):
 
 	def tempsing(self, what):
 		if not what[0] is '-' and not what[0] is '0':
-			# return '+' + what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
-			return str('+' + what + '%s' % u"\u00B0" + self.units['temperature'])
-			# return '+' + what + '%s' % self.units['temperature']
+			return '+' + what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
+			# return str('+' + what + '%s' % u"\u00B0" + self.units['temperature'])
+			return '+' + what + '%s' % self.units['temperature']
 		else:
-			# return what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
-			return str(what + '%s' % u"\u00B0" + self.units['temperature'])
-			# return what + '%s' % self.units['temperature']
+			return what + '%s' % unichr(176).encode("latin-1") + self.units['temperature']
+			# return str(what + '%s' % u"\u00B0" + self.units['temperature'])
+			return what + '%s' % self.units['temperature']
 
 	def tempsing_nu(self, what):
 		if not what[0] is '-' and not what[0] is '0':
-			# return '+' + what + '%s' % unichr(176).encode("latin-1")
-			return str('+' + what + '%s' % u"\u00B0")
-			# return '+' + what + '%s' % ''
+			return '+' + what + '%s' % unichr(176).encode("latin-1")
+			# return str('+' + what + '%s' % u"\u00B0")
+			return '+' + what + '%s' % ''
 		else:
-			# return what + '%s' % unichr(176).encode("latin-1")
-			return str(what + '%s' % u"\u00B0")
-			# return what + '%s' % ''
+			return what + '%s' % unichr(176).encode("latin-1")
+			# return str(what + '%s' % u"\u00B0")
+			return what + '%s' % ''
 ##############################################################################
 SKIN_STYLE1_HD = """
 <screen name="WeatherInfo" position="365,90" size="550,590" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">
