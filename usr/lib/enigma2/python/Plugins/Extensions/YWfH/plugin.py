@@ -1,7 +1,7 @@
 # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.3.3
+# v.0.3.4
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -99,8 +99,8 @@ class WeatherInfo(Screen):
 			'41':(_('Heavy snow')), '42':(_('Scattered snow showers')), '43':(_('Heavy snow')), '44':(_('Partly cloudy')), '45':(_('Thundershowers')), '46':(_('Snow showers')),\
 			'47':(_('Isolated thundershowers')), '3200':(_('Not available'))}
 		self.weekday = {'Mon':(_('Monday')), 'Tue':(_('Tuesday')), 'Wed':(_('Wednesday')), 'Thu':(_('Thursday')), 'Fri':(_('Friday')), 'Sat':(_('Saturday')), 'Sun':(_('Sunday'))}
-		self.month = {'Jan':(_('Jan.')), 'Feb':(_('Feb.')), 'Mar':(_('Mar.')), 'Apr':(_('Apr.')), 'May':(_('May')), 'June':(_('June')), 'July':(_('July')),\
-			'Aug':(_('Aug.')), 'Sept':(_('Sept.')), 'Oct':(_('Oct.')), 'Nov':(_('Nov.')), 'Dec':(_('Dec.'))}
+		self.month = {'Jan':(_('Jan.')), 'Feb':(_('Feb.')), 'Mar':(_('Mar.')), 'Apr':(_('Apr.')), 'May':(_('May')), 'Jun':(_('June')), 'Jul':(_('July')),\
+			'Aug':(_('Aug.')), 'Sep':(_('Sept.')), 'Oct':(_('Oct.')), 'Nov':(_('Nov.')), 'Dec':(_('Dec.'))}
 		self.location = {'city':'', 'country':''}
 		self.geo = {'lat':'', 'long':''}
 		self.units = {'temperature':'', 'distance':'', 'pressure':'', 'speed':''}
