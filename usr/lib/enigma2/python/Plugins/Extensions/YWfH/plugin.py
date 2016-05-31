@@ -1,7 +1,8 @@
+# -*- coding: UTF-8 -*-
 # Yahoo! weather for Hotkey
 # Copyright (c) 2boom 2015-16
 # Modified by TomTelos for Graterlia OS
-# v.0.3.4
+# v.0.3.5
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -510,11 +511,11 @@ class WeatherInfo(Screen):
 		if not what[0] is '-' and not what[0] is '0':
 			return '+' + what + '%s' % unichr(176).encode("latin-1")
 			# return str('+' + what + '%s' % u"\u00B0")
-			return '+' + what + '%s' % ''
+			# return '+' + what + '%s' % ''
 		else:
 			return what + '%s' % unichr(176).encode("latin-1")
 			# return str(what + '%s' % u"\u00B0")
-			return what + '%s' % ''
+			# return what + '%s' % ''
 ##############################################################################
 SKIN_STYLE1_HD = """
 <screen name="WeatherInfo" position="365,90" size="550,590" title="2boom's Yahoo Weather" zPosition="1" flags="wfBorder">

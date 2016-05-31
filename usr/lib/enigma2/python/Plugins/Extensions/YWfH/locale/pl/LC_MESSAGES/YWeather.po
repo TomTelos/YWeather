@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Yweather plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-20 01:13+0100\n"
-"PO-Revision-Date: 2016-04-27 19:06+0200\n"
+"PO-Revision-Date: 2016-05-31 15:56+0200\n"
 "Last-Translator: TomTelos\n"
-"Language-Team: TomTelos\n"
+"Language-Team: Graterlia OS\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,7 +30,7 @@ msgid "YWeather.py not found"
 msgstr "Nie znaleziono YWeather.py"
 
 msgid "yahoo! weather plugin config"
-msgstr "Konfiguracja pogody"
+msgstr "Konfiguracja wtyczki Yahoo! Pogoda"
 
 msgid "City code (woeid)"
 msgstr "Kod lokalizacji (woeid)"
@@ -44,65 +44,170 @@ msgstr "Wybierz przycisk na pilocie"
 msgid "Feels: %s"
 msgstr "Odczuwalna: %s"
 
-msgid "%3.02f m/s"
-msgstr "%3.02f km/h"
+msgid "%.1f m/s"
+msgstr "%.1f km/h"
 
-msgid "N, %3.02f m/s"
-msgstr "pn, %3.02f km/h"
+msgid "N, %.1f m/s"
+msgstr "pn, %.1f m/s"
 
-msgid "NNE, %3.02f m/s"
-msgstr "pn,pn-ws, %3.02f km/h"
+msgid "NNE, %.1f m/s"
+msgstr "pn,pn-ws, %.1f m/s"
 
-msgid "NE, %3.02f m/s"
-msgstr "pn-ws, %3.02f km/h"
+msgid "NE, %.1f m/s"
+msgstr "pn-ws, %.1f m/s"
 
-msgid "ENE, %3.02f m/s"
-msgstr "ws,pn-ws, %3.02f km/h"
+msgid "ENE, %.1f m/s"
+msgstr "ws,pn-ws, %.1f m/s"
 
-msgid "E, %3.02f m/s"
-msgstr "ws, %3.02f km/h"
+msgid "E, %.1f m/s"
+msgstr "ws, %.1f m/s"
 
-msgid "ESE, %3.02f m/s"
-msgstr "ws,pd-ws, %3.02f km/h"
+msgid "ESE, %.1f m/s"
+msgstr "ws,pd-ws, %.1f m/s"
 
-msgid "SE, %3.02f m/s"
-msgstr "pd-ws, %3.02f km/h"
+msgid "SE, %.1f m/s"
+msgstr "pd-ws, %.1f m/s"
 
-msgid "SSE, %3.02f m/s"
-msgstr "pd,pd-ws, %3.02f km/h"
+msgid "SSE, %.1f m/s"
+msgstr "pd,pd-ws, %.1f m/s"
 
-msgid "S, %3.02f m/s"
-msgstr "pd, %3.02f km/h"
+msgid "S, %.1f m/s"
+msgstr "pd, %.1f m/s"
 
-msgid "SSW, %3.02f m/s"
-msgstr "pd,pd-za, %3.02f km/h"
+msgid "SSW, %.1f m/s"
+msgstr "pd,pd-za, %.1f m/s"
 
-msgid "SW, %3.02f m/s"
-msgstr "pd-za, %3.02f km/h"
+msgid "SW, %.1f m/s"
+msgstr "pd-za, %.1f m/s"
 
-msgid "WSW, %3.02f m/s"
-msgstr "za,pd-za, %3.02f km/h"
+msgid "WSW, %.1f m/s"
+msgstr "za,pd-za, %.1f m/s"
 
-msgid "W, %3.02f m/s"
-msgstr "za, %3.02f km/h"
+msgid "W, %.1f m/s"
+msgstr "za, %.1f m/s"
 
-msgid "WNW, %3.02f m/s"
-msgstr "za.pd-za, %3.02f km/h"
+msgid "WNW, %.1f m/s"
+msgstr "za.pd-za, %.1f m/s"
 
-msgid "NW, %3.02f m/s"
-msgstr "pn-za, %3.02f km/h"
+msgid "NW, %.1f m/s"
+msgstr "pn-za, %.1f m/s"
 
-msgid "NNW, %3.02f m/s"
-msgstr "pn,pn-za, %3.02f km/h"
+msgid "NNW, %.1f m/s"
+msgstr "pn,pn-za, %.1f m/s"
+
+msgid "%.1f km/h"
+msgstr "%.1f km/h"
+
+msgid "N, %.1f km/h"
+msgstr "pn, %.1f km/h"
+
+msgid "NNE, %.1f km/h"
+msgstr "pn,pn-ws, %.1f km/h"
+
+msgid "NE, %.1f km/h"
+msgstr "pn-ws, %.1f km/h"
+
+msgid "ENE, %.1f km/h"
+msgstr "ws,pn-ws, %.1f km/h"
+
+msgid "E, %.1f km/h"
+msgstr "ws, %.1f km/h"
+
+msgid "ESE, %.1f km/h"
+msgstr "ws,pd-ws, %.1f km/h"
+
+msgid "SE, %.1f km/h"
+msgstr "pd-ws, %.1f km/h"
+
+msgid "SSE, %.1f km/h"
+msgstr "pd,pd-ws, %.1f km/h"
+
+msgid "S, %.1f km/h"
+msgstr "pd, %.1f km/h"
+
+msgid "SSW, %.1f km/h"
+msgstr "pd,pd-za, %.1f km/h"
+
+msgid "SW, %.1f km/h"
+msgstr "pd-za, %.1f km/h"
+
+msgid "WSW, %.1f km/h"
+msgstr "za,pd-za, %.1f km/h"
+
+msgid "W, %.1f km/h"
+msgstr "za, %.1f km/h"
+
+msgid "WNW, %.1f km/h"
+msgstr "za.pd-za, %.1f km/h"
+
+msgid "NW, %.1f km/h"
+msgstr "pn-za, %.1f km/h"
+
+msgid "NNW, %.1f km/h"
+msgstr "pn,pn-za, %.1f km/h"
+
+msgid "%.1f mph"
+msgstr "%.1f mph"
+
+msgid "N, %.1f mph"
+msgstr "pn, %.1f mph"
+
+msgid "NNE, %.1f mph"
+msgstr "pn,pn-ws, %.1f mph"
+
+msgid "NE, %.1f mph"
+msgstr "pn-ws, %.1f mph"
+
+msgid "ENE, %.1f mph"
+msgstr "ws,pn-ws, %.1f mph"
+
+msgid "E, %.1f mph"
+msgstr "ws, %.1f mph"
+
+msgid "ESE, %.1f mph"
+msgstr "ws,pd-ws, %.1f mph"
+
+msgid "SE, %.1f mph"
+msgstr "pd-ws, %.1f mph"
+
+msgid "SSE, %.1f mph"
+msgstr "pd,pd-ws, %.1f mph"
+
+msgid "S, %.1f mph"
+msgstr "pd, %.1f mph"
+
+msgid "SSW, %.1f mph"
+msgstr "pd,pd-za, %.1f mph"
+
+msgid "SW, %.1f mph"
+msgstr "pd-za, %.1f mph"
+
+msgid "WSW, %.1f mph"
+msgstr "za,pd-za, %.1f mph"
+
+msgid "W, %.1f mph"
+msgstr "za, %.1f mph"
+
+msgid "WNW, %.1f mph"
+msgstr "za.pd-za, %.1f mph"
+
+msgid "NW, %.1f mph"
+msgstr "pn-za, %.1f mph"
+
+msgid "NNW, %.1f mph"
+msgstr "pn,pn-za, %.1f mph"
 
 msgid "%s km"
 msgstr "%s km"
 
-msgid "%s mb"
-msgstr "%s mb"
+msgid "%d hPa(mbar)"
+msgstr "%d hPa"
 
 msgid "%d mmHg"
-msgstr "%d mb"
+msgstr "%d mmHg"
+
+msgid "%.1f inHg"
+msgstr "%.1f inHg"
 
 msgid "Tornado"
 msgstr "Tornado"
@@ -117,7 +222,7 @@ msgid "Severe thunderstorms"
 msgstr "Silne burze"
 
 msgid "Thunderstorms"
-msgstr "Burza"
+msgstr "Burze"
 
 msgid "Mixed rain and snow"
 msgstr "Deszcz i śnieg"
@@ -216,10 +321,10 @@ msgid "Hot"
 msgstr "Upał"
 
 msgid "Isolated thunderstorms"
-msgstr "Przelotne Burze"
+msgstr "Przelotne burze"
 
 msgid "Scattered thunderstorms"
-msgstr "Przelotne Burze"
+msgstr "Przelotne burze"
 
 msgid "Isolated showers"
 msgstr "Przelotne opady deszczu"
@@ -270,7 +375,7 @@ msgid "Sunday"
 msgstr "Niedziela"
 
 msgid "%s%% humidity"
-msgstr "%s%% Wilgotność"
+msgstr "%s%% wilgotności"
 
 msgid "Tomorrow"
 msgstr "Jutro"
